@@ -54,6 +54,10 @@ public class ElectricityPart extends Part{
         return "ElectricityPart{" +
                 "engineVolume=" + engineVolume +
                 ", power=" + power +
+                ", partID=" + partID +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", availability=" + availability +
                 '}';
     }
 }

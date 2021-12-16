@@ -80,6 +80,10 @@ public class DataProviderXML extends AbstractDataProvider{
         }
     }
 
+    private void findPart(Long partID){
+
+    }
+
     //Client methods
 
     private void clientsToXML(List<Client> clList) throws JAXBException, IOException {
@@ -566,9 +570,9 @@ public class DataProviderXML extends AbstractDataProvider{
         String className = getClassName();
 
         List<ChassisPart> chassisPartList=chassisPartsFromXML();
-        if((getChassisPartByID(chassisPart.getPartID()).getPartID().equals(chassisPart.getPartID())) ||
-                (getElectricityPartByID(chassisPart.getPartID()).getPartID().equals(chassisPart.getPartID())) ||
-                (getEnginePartByID(chassisPart.getPartID()).getPartID().equals(chassisPart.getPartID()))) {
+        if((getChassisPartByID(chassisPart.getPartID()) == null) &&
+                (getElectricityPartByID(chassisPart.getPartID()) == null) &&
+                (getEnginePartByID(chassisPart.getPartID()) == null)) {
             chassisPartList.add(chassisPart);
             chassisPartList = sortChassisPartList(chassisPartList);
             chassisPartsToXML(chassisPartList);

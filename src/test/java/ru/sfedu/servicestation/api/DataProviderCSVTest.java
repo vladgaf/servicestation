@@ -74,13 +74,11 @@ class DataProviderCSVTest extends TestBase{
     @Test
     void testCreateEnginePart() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException, JAXBException {
         csvInstance.createEnginePart(enginePart1);
-        csvInstance.getEnginePartByID(1L);
     }
 
     @Test
     void testCreateOrder() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
         csvInstance.createOrder(order1);
-
     }
 
     @Test

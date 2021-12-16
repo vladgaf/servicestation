@@ -23,19 +23,14 @@ public class Order implements Serializable {
     private List<ElectricityPart> electricityParts;
     @CsvBindByName
     private List<ChassisPart> chassisParts;
-
     @CsvBindByName
     private Employee employee;
-
     @CsvBindByName
     private Double employeeSalary;
-
     @CsvBindByName
     private Double totalServiceIncome;
-
     @CsvBindByName
     private Double totalEmployeeIncome;
-
     @CsvBindByName
     private Double totalMarkup;
 

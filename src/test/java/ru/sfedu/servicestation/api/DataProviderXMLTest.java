@@ -95,14 +95,4 @@ class DataProviderXMLTest extends TestBase{
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
     }
 
-    @Test
-    void testCreateEnginePart() throws JAXBException, IOException {
-        xmlInstance.createEnginePart(enginePart1);
-
-    }
-
-    @Test
-    void testCreateOrder() throws JAXBException, IOException {
-        xmlInstance.createOrder(order1);
-    }
 }

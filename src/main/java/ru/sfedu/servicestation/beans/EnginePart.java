@@ -78,6 +78,10 @@ public class EnginePart extends Part{
                 ", fuel='" + fuel + '\'' +
                 ", serialNumber=" + serialNumber +
                 ", volume=" + volume +
+                ", partID=" + partID +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", availability=" + availability +
                 '}';
     }
 }

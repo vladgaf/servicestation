@@ -5,18 +5,19 @@ import com.opencsv.bean.CsvBindByName;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Part {
+public class Part implements Serializable {
     @CsvBindByName
-    private Long partID;
+    protected Long partID;
     @CsvBindByName
-    private String name;
+    protected String name;
     @CsvBindByName
-    private Integer price;
+    protected Integer price;
     @CsvBindByName
-    private Boolean availability;
+    protected Boolean availability;
 
     public Part() {
     }
