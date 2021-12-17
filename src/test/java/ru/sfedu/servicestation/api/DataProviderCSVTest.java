@@ -21,7 +21,7 @@ class DataProviderCSVTest extends TestBase{
     void calculateMarkupSuccess() throws JAXBException, IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
         csvInstance.createOrder(order1);
         assertEquals(csvInstance.calculateMarkup(1L), 250.0);
-        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+        csvInstance.deleteOrderByID(1L);
     }
 
     @Test
@@ -32,9 +32,10 @@ class DataProviderCSVTest extends TestBase{
 
 
     @Test
-    void calculateIndividualMarkupSuccess() throws IOException {
+    void calculateIndividualMarkupSuccess() throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+        csvInstance.createOrder(order1);
         assertEquals(csvInstance.calculateIndividualMarkup(order1), 250.0);
-        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+        csvInstance.deleteOrderByID(1L);
     }
 
     @Test
@@ -45,9 +46,10 @@ class DataProviderCSVTest extends TestBase{
 
 
     @Test
-    void calculateCompanyMarkupSuccess() throws IOException {
+    void calculateCompanyMarkupSuccess() throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+        csvInstance.createOrder(order1);
         assertEquals(csvInstance.calculateCompanyMarkup(order1), 500.0);
-        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+        csvInstance.deleteOrderByID(1L);
     }
 
     @Test
@@ -63,7 +65,7 @@ class DataProviderCSVTest extends TestBase{
         test_order.setTotalServiceIncome(144.4);
         test_order.setTotalEmployeeIncome(900.0);
         assertEquals(csvInstance.calculateIncome(1L), test_order);
-        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+        csvInstance.deleteOrderByID(1L);
     }
 
     @Test
@@ -74,9 +76,10 @@ class DataProviderCSVTest extends TestBase{
 
 
     @Test
-    void calculatePartsIncomeSuccess() throws IOException {
+    void calculatePartsIncomeSuccess() throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+        csvInstance.createOrder(order1);
         assertEquals(csvInstance.calculatePartsIncome(order1), 44.400000000000006);
-        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+        csvInstance.deleteOrderByID(1L);
     }
 
     @Test
@@ -87,9 +90,10 @@ class DataProviderCSVTest extends TestBase{
 
 
     @Test
-    void calculateEmployeeIncomeSuccess() throws IOException {
+    void calculateEmployeeIncomeSuccess() throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+        csvInstance.createOrder(order1);
         assertEquals(csvInstance.calculateEmployeeIncome(order1), 100.0);
-        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+        csvInstance.deleteOrderByID(1L);
     }
 
     @Test
@@ -97,5 +101,6 @@ class DataProviderCSVTest extends TestBase{
         assertNull(csvInstance.calculateEmployeeIncome(csvInstance.getOrderByID(4L)));
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
     }
+
 
 }

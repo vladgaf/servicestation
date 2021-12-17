@@ -145,7 +145,8 @@ public class TestBase {
     public void clearData(String path){
         try {
             for (File myFile : new File(path).listFiles())
-                if (myFile.isFile()) myFile.delete();
+                if (myFile.isFile())
+                    myFile.delete();
         }  catch (Exception e) {
             log.error(e);
         }

@@ -29,8 +29,9 @@ class DataProviderXMLTest extends TestBase{
 
 
     @Test
-    void calculateIndividualMarkupSuccess() throws IOException {
-        assertEquals(xmlInstance.calculateIndividualMarkup(order1), 250.0);
+    void calculateIndividualMarkupSuccess() throws IOException, JAXBException {
+        xmlInstance.createOrder(order1);
+        assertEquals(xmlInstance.calculateIndividualMarkup(xmlInstance.getOrderByID(1L)), 250.0);
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
     }
 
@@ -42,8 +43,9 @@ class DataProviderXMLTest extends TestBase{
 
 
     @Test
-    void calculateCompanyMarkupSuccess() throws IOException {
-        assertEquals(xmlInstance.calculateCompanyMarkup(order1), 500.0);
+    void calculateCompanyMarkupSuccess() throws IOException, JAXBException {
+        xmlInstance.createOrder(order1);
+        assertEquals(xmlInstance.calculateCompanyMarkup(xmlInstance.getOrderByID(1L)), 500.0);
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
     }
 
@@ -71,8 +73,9 @@ class DataProviderXMLTest extends TestBase{
 
 
     @Test
-    void calculatePartsIncomeSuccess() throws IOException {
-        assertEquals(xmlInstance.calculatePartsIncome(order1), 44.400000000000006);
+    void calculatePartsIncomeSuccess() throws IOException, JAXBException {
+        xmlInstance.createOrder(order1);
+        assertEquals(xmlInstance.calculatePartsIncome(xmlInstance.getOrderByID(1L)), 44.400000000000006);
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
     }
 
@@ -84,8 +87,9 @@ class DataProviderXMLTest extends TestBase{
 
 
     @Test
-    void calculateEmployeeIncomeSuccess() throws IOException {
-        assertEquals(xmlInstance.calculateEmployeeIncome(order1), 100.0);
+    void calculateEmployeeIncomeSuccess() throws IOException, JAXBException {
+        xmlInstance.createOrder(order1);
+        assertEquals(xmlInstance.calculateEmployeeIncome(xmlInstance.getOrderByID(1L)), 100.0);
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
     }
 
@@ -95,9 +99,4 @@ class DataProviderXMLTest extends TestBase{
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
     }
 
-
-    @Test
-    void testCreateOrder() throws JAXBException, IOException {
-        xmlInstance.createOrder(order1);
-    }
 }
