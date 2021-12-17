@@ -61,8 +61,8 @@ public class Constants {
 
 
     public static final String CAR_FIELDS_DELIMITER = "@";
-    public static final String CLIENT_FIELDS_DELIMITER = "^";
-    public static final String CHASSIS_PART_FIELDS_DELIMITER = "%";
+    public static final String CLIENT_FIELDS_DELIMITER = "\\^";
+    public static final String CHASSIS_PART_FIELDS_DELIMITER = "\\*";
     public static final String CHASSIS_PART_OBJECT_DELIMITER = "#";
     public static final String ENGINE_PART_FIELDS_DELIMITER = "&";
     public static final String ENGINE_PART_OBJECT_DELIMITER = "!";

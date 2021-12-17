@@ -24,8 +24,8 @@ public class ClientConverter extends AbstractBeanField {
         Client client = new Client();
         try {
             String[] data = s.split(fieldDelimiter);
-            //String[] parsedData = data[0].split(fieldDelimiter);
-            log.debug(data[0]);
+            String[] parsedData = data[0].split(fieldDelimiter);
+            log.debug(parsedData[0]);
             client.setCar((Car) carConverter.convert(data[3]));
             client.setClientID(Long.parseLong(data[0]));
             client.setClientType((ClientType) clientTypeConverter.convert(data[2]));

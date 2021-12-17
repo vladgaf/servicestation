@@ -21,6 +21,8 @@ import org.apache.logging.log4j.Logger;
 import ru.sfedu.servicestation.utils.ConfigurationUtil;
 import ru.sfedu.servicestation.utils.Constants;
 
+import javax.xml.bind.JAXBException;
+
 
 public class DataProviderCSV extends AbstractDataProvider{
 
@@ -204,6 +206,7 @@ public class DataProviderCSV extends AbstractDataProvider{
                 }
             }
             Client client = found.get();
+            log.info(client);
             return client;
         } catch (NoSuchElementException e){
             log.error(e);
@@ -705,5 +708,103 @@ public class DataProviderCSV extends AbstractDataProvider{
             log.info(Constants.ERROR_ORDER_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
+    }
+
+    //USE CASE METHODS
+
+    public Double calculateMarkup(Long orderID) throws JAXBException, IOException {
+        try{
+            Order order = getOrderByID(orderID);
+            ClientType clientType = order.getClient().getClientType();
+            switch (clientType){
+                case INDIVIDUAL:
+                    order.setTotalMarkup(calculateIndividualMarkup(order));
+                    updateOrderByID(order);
+                    log.info(Constants.LOG_MARKUP + order.getTotalMarkup());
+                    return calculateIndividualMarkup(order);
+                case COMPANY:
+                    order.setTotalMarkup(calculateCompanyMarkup(order));
+                    updateOrderByID(order);
+                    log.info(Constants.LOG_MARKUP + order.getTotalMarkup());
+                    return calculateCompanyMarkup(order);
+                default:
+                    order.setTotalMarkup(Constants.DOUBLE_ZERO);
+                    updateOrderByID(order);
+                    log.info(Constants.LOG_MARKUP + order.getTotalMarkup());
+                    return order.getEmployeeSalary();
+            }
+        } catch (Exception e){
+            log.error(Constants.ERROR_MARKUP_NF);
+            return null;
+        }
+
+    }
+
+    public Double calculateIndividualMarkup(Order order){
+        try {
+            Double individualMarkup = order.getEmployeeSalary() * Constants.INDIVIDUAL_RATIO;
+            //log.info(Constants.LOG_MARKUP + individualMarkup);
+            return individualMarkup;
+        } catch (NullPointerException e){
+            log.error(Constants.ERROR_MARKUP_NF);
+            return null;
+        }
+
+    }
+
+    public Double calculateCompanyMarkup(Order order){
+        try{
+            Double companyMarkup = order.getEmployeeSalary() * Constants.COMPANY_RATIO;
+            //log.info(Constants.LOG_MARKUP + companyMarkup);
+            return companyMarkup;
+        } catch (NullPointerException e){
+            log.error(Constants.ERROR_MARKUP_NF);
+            return null;
+        }
+
+    }
+
+    public Order calculateIncome(Long orderID) throws JAXBException, IOException {
+        try {
+            Order order = getOrderByID(orderID);
+            order.setTotalServiceIncome(calculatePartsIncome(order) + calculateEmployeeIncome(order));
+            order.setTotalEmployeeIncome(order.getEmployeeSalary() - calculateEmployeeIncome(order));
+            updateOrderByID(order);
+            log.info(Constants.LOG_SERVICE_INCOME + order.getTotalServiceIncome() + Constants.LOG_EMPLOYEE_INCOME + order.getTotalEmployeeIncome());
+            return order;
+        } catch (NullPointerException | CsvRequiredFieldEmptyException | CsvDataTypeMismatchException e){
+            log.error(Constants.ERROR_INCOME_NF);
+            return null;
+        }
+
+    }
+
+    public Double calculatePartsIncome(Order order){
+        try{
+            Integer enginePartsTotal = order.getEngineParts().stream().mapToInt(Part::getPrice).sum();
+            Integer chassisPartsTotal = order.getChassisParts().stream().mapToInt(Part::getPrice).sum();
+            Integer electricityPartsTotal = order.getElectricityParts().stream().mapToInt(Part::getPrice).sum();
+
+            Double partsIncome = (enginePartsTotal+chassisPartsTotal+electricityPartsTotal) * Constants.PARTS_INCOME_RATIO;
+            log.info(Constants.LOG_PARTS_INCOME_FS + partsIncome);
+
+            return partsIncome;
+        } catch (NullPointerException e){
+            log.error(Constants.ERROR_INCOME_NF);
+            return null;
+        }
+
+    }
+
+    public Double calculateEmployeeIncome(Order order){
+        try{
+            Double employeeIncome = order.getEmployeeSalary() * Constants.EMPLOYEE_INCOME_RATIO;
+            log.info(Constants.LOG_EMPLOYEE_INCOME_FS + employeeIncome);
+            return employeeIncome;
+        } catch (NullPointerException e){
+            log.error(Constants.ERROR_INCOME_NF);
+            return null;
+        }
+
     }
 }

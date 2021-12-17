@@ -18,71 +18,84 @@ class DataProviderCSVTest extends TestBase{
     }
 
     @Test
-    void createCar() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
-        csvInstance.createCar(car1);
-        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
-    }
-
-
-    @Test
-    void deleteCarByID() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
-        csvInstance.createCar(car2);
-        csvInstance.deleteCarByID(2L);
-        assertNull(csvInstance.getCarByID(2L));
-        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
-    }
-
-    @Test
-    void updateCarByID() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
-        csvInstance.createCar(car2);
-        csvInstance.updateCarByID(car2_upd);
-        assertEquals(csvInstance.getCarByID(2L).getYear(), 2003);
-    }
-
-    @Test
-    void testCreateClient() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
-        csvInstance.createClient(client1);
-        //clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
-    }
-
-    @Test
-    void getClientByID() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
-        csvInstance.createClient(client1);
-        assertEquals(csvInstance.getClientByID(1L), client1);
-    }
-
-    @Test
-    void deleteClientByID() {
-    }
-
-    @Test
-    void testCreateEmployee() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
-        csvInstance.createEmployee(employee1);
-        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
-    }
-
-    @Test
-    void getEmployeeByID() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
-        csvInstance.createEmployee(employee1);
-        csvInstance.getEmployeeByID(1L);
-    }
-
-    @Test
-    void deleteEmployeeByID() {
-    }
-
-    @Test
-    void testCreateEnginePart() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException, JAXBException {
-        csvInstance.createEnginePart(enginePart1);
-    }
-
-    @Test
-    void testCreateOrder() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
+    void calculateMarkupSuccess() throws JAXBException, IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
         csvInstance.createOrder(order1);
-        csvInstance.getOrderByID(1L);
+        assertEquals(csvInstance.calculateMarkup(1L), 250.0);
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
     }
 
     @Test
-    void testCreateEnginePart1() {
+    void calculateMarkupFail() throws JAXBException, IOException {
+        assertNull(csvInstance.calculateMarkup(30L));
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
     }
+
+
+    @Test
+    void calculateIndividualMarkupSuccess() throws IOException {
+        assertEquals(csvInstance.calculateIndividualMarkup(order1), 250.0);
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+    }
+
+    @Test
+    void calculateIndividualMarkupFail() throws IOException, JAXBException {
+        assertNull(csvInstance.calculateIndividualMarkup(csvInstance.getOrderByID(1L)));
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+    }
+
+
+    @Test
+    void calculateCompanyMarkupSuccess() throws IOException {
+        assertEquals(csvInstance.calculateCompanyMarkup(order1), 500.0);
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+    }
+
+    @Test
+    void calculateCompanyMarkupFail() throws IOException, JAXBException {
+        assertNull(csvInstance.calculateCompanyMarkup(csvInstance.getOrderByID(1L)));
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+    }
+
+
+    @Test
+    void calculateIncomeSuccess() throws JAXBException, IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+        csvInstance.createOrder(test_order);
+        test_order.setTotalServiceIncome(144.4);
+        test_order.setTotalEmployeeIncome(900.0);
+        assertEquals(csvInstance.calculateIncome(1L), test_order);
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+    }
+
+    @Test
+    void calculateIncomeFail() throws JAXBException, IOException {
+        assertNull(csvInstance.calculateIncome(3L));
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+    }
+
+
+    @Test
+    void calculatePartsIncomeSuccess() throws IOException {
+        assertEquals(csvInstance.calculatePartsIncome(order1), 44.400000000000006);
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+    }
+
+    @Test
+    void calculatePartsIncomeFail() throws IOException, JAXBException {
+        assertNull(csvInstance.calculatePartsIncome(csvInstance.getOrderByID(3L)));
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+    }
+
+
+    @Test
+    void calculateEmployeeIncomeSuccess() throws IOException {
+        assertEquals(csvInstance.calculateEmployeeIncome(order1), 100.0);
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+    }
+
+    @Test
+    void calculateEmployeeIncomeFail() throws IOException, JAXBException {
+        assertNull(csvInstance.calculateEmployeeIncome(csvInstance.getOrderByID(4L)));
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+    }
+
 }
