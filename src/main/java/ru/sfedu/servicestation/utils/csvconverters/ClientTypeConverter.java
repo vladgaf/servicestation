@@ -14,7 +14,7 @@ public class ClientTypeConverter extends AbstractBeanField {
     private static final Logger log = LogManager.getLogger(ClientTypeConverter.class);
 
     @Override
-    public Object convert(String s) throws CsvDataTypeMismatchException, CsvConstraintViolationException {
+    protected Object convert(String s) throws CsvDataTypeMismatchException, CsvConstraintViolationException {
         try {
             return ClientType.valueOf(s);
         } catch (Exception e){

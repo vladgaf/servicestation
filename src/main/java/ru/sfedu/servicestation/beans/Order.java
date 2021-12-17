@@ -1,6 +1,8 @@
 package ru.sfedu.servicestation.beans;
 
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvCustomBindByName;
+import ru.sfedu.servicestation.utils.csvconverters.*;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -15,15 +17,15 @@ public class Order implements Serializable {
 
     @CsvBindByName
     private Long orderID;
-    @CsvBindByName
+    @CsvCustomBindByName(required = false, converter = ClientConverter.class)
     private Client client;
-    @CsvBindByName
+    @CsvCustomBindByName(required = false, converter = EnginePartConverter.class)
     private List<EnginePart> engineParts;
-    @CsvBindByName
+    @CsvCustomBindByName(required = false, converter = ElectricityPartConverter.class)
     private List<ElectricityPart> electricityParts;
-    @CsvBindByName
+    @CsvCustomBindByName(required = false, converter = ChassisPartConverter.class)
     private List<ChassisPart> chassisParts;
-    @CsvBindByName
+    @CsvCustomBindByName(required = false, converter = EmployeeConverter.class)
     private Employee employee;
     @CsvBindByName
     private Double employeeSalary;

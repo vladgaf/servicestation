@@ -659,6 +659,7 @@ public class DataProviderCSV extends AbstractDataProvider{
                 }
             }
             Order order = found.get();
+            log.debug(order);
             return order;
         } catch (NoSuchElementException e){
             log.error(e);

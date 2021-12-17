@@ -79,6 +79,7 @@ class DataProviderCSVTest extends TestBase{
     @Test
     void testCreateOrder() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
         csvInstance.createOrder(order1);
+        csvInstance.getOrderByID(1L);
     }
 
     @Test
