@@ -675,9 +675,9 @@ public class DataProviderXML extends AbstractDataProvider{
         String className = getClassName();
 
         List<ElectricityPart> electricityPartList=electricityPartsFromXML();
-        if((getChassisPartByID(electricityPart.getPartID()).getPartID().equals(electricityPart.getPartID())) ||
-                (getElectricityPartByID(electricityPart.getPartID()).getPartID().equals(electricityPart.getPartID())) ||
-                (getEnginePartByID(electricityPart.getPartID()).getPartID().equals(electricityPart.getPartID()))) {
+        if((getChassisPartByID(electricityPart.getPartID()) == null) &&
+                (getElectricityPartByID(electricityPart.getPartID()) == null) &&
+                (getEnginePartByID(electricityPart.getPartID()) == null)) {
             electricityPartList.add(electricityPart);
             electricityPartList=sortElectricityPartList(electricityPartList);
             electricityPartsToXML(electricityPartList);
@@ -784,9 +784,9 @@ public class DataProviderXML extends AbstractDataProvider{
         String className = getClassName();
 
         List<EnginePart> enginePartList=enginePartsFromXML();
-        if((getChassisPartByID(enginePart.getPartID()).getPartID().equals(enginePart.getPartID())) ||
-                (getElectricityPartByID(enginePart.getPartID()).getPartID().equals(enginePart.getPartID())) ||
-                (getEnginePartByID(enginePart.getPartID()).getPartID().equals(enginePart.getPartID()))) {
+        if((getChassisPartByID(enginePart.getPartID()) == null) &&
+                (getElectricityPartByID(enginePart.getPartID()) == null) &&
+                (getEnginePartByID(enginePart.getPartID()) == null)) {
             enginePartList.add(enginePart);
             enginePartList=sortEnginePartList(enginePartList);
             enginePartsToXML(enginePartList);

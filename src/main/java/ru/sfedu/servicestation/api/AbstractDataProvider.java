@@ -22,6 +22,5 @@ public abstract class AbstractDataProvider  {
         mdbDP.insertRecord(historyContent,string);
     }
 
-    public abstract void deleteCarByID(Long id) throws JAXBException, IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException;
 
 }

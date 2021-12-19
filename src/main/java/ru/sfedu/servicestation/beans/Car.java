@@ -19,7 +19,7 @@ public class Car implements Serializable {
     @CsvBindByName
     private String model;
     @CsvBindByName
-    private Integer year;
+    private Integer carYear;
     @CsvBindByName
     private String engine;
 
@@ -51,11 +51,11 @@ public class Car implements Serializable {
     }
 
     public Integer getYear() {
-        return year;
+        return carYear;
     }
 
     public void setYear(Integer year) {
-        this.year = year;
+        this.carYear = year;
     }
 
     public String getEngine() {
@@ -74,13 +74,13 @@ public class Car implements Serializable {
         return Objects.equals(carID, car.carID) &&
                 Objects.equals(brand, car.brand) &&
                 Objects.equals(model, car.model) &&
-                Objects.equals(year, car.year) &&
+                Objects.equals(carYear, car.carYear) &&
                 Objects.equals(engine, car.engine);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(carID, brand, model, year, engine);
+        return Objects.hash(carID, brand, model, carYear, engine);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class Car implements Serializable {
                 "carID=" + carID +
                 ", brand='" + brand + '\'' +
                 ", model='" + model + '\'' +
-                ", year=" + year +
+                ", year=" + carYear +
                 ", engine='" + engine + '\'' +
                 '}';
     }

@@ -79,7 +79,7 @@ public class EnginePart extends Part{
                 ", serialNumber=" + serialNumber +
                 ", volume=" + volume +
                 ", partID=" + partID +
-                ", name='" + name + '\'' +
+                ", name='" + partName + '\'' +
                 ", price=" + price +
                 ", availability=" + availability +
                 '}';

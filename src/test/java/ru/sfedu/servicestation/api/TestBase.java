@@ -17,6 +17,7 @@ public class TestBase {
 
     public DataProviderCSV csvInstance = new DataProviderCSV();
     public DataProviderXML xmlInstance = new DataProviderXML();
+    public DataProviderJDBC jdbcInstance = new DataProviderJDBC();
 
     //Objects examples
 
@@ -74,7 +75,7 @@ public class TestBase {
     public Employee createEmployee(Long employeeID, String name){
         Employee employee = new Employee();
         employee.setEmployeeID(employeeID);
-        employee.setName(name);
+        employee.setEmployeeName(name);
         return employee;
     }
 

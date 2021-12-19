@@ -14,7 +14,7 @@ public class Employee {
     @CsvBindByName
     private Long employeeID;
     @CsvBindByName
-    private String name;
+    private String employeeName;
 
     public Employee() {
     }
@@ -27,12 +27,12 @@ public class Employee {
         this.employeeID = employeeID;
     }
 
-    public String getName() {
-        return name;
+    public String getEmployeeName() {
+        return employeeName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
     }
 
     @Override
@@ -41,19 +41,19 @@ public class Employee {
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
         return Objects.equals(employeeID, employee.employeeID) &&
-                Objects.equals(name, employee.name);
+                Objects.equals(employeeName, employee.employeeName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(employeeID, name);
+        return Objects.hash(employeeID, employeeName);
     }
 
     @Override
     public String toString() {
         return "Employee{" +
                 "employeeID=" + employeeID +
-                ", name='" + name + '\'' +
+                ", employeeName='" + employeeName + '\'' +
                 '}';
     }
 }

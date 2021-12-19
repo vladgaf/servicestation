@@ -8,6 +8,8 @@ public class Constants {
     public static final String PATH_TO_CSV = "PATH_TO_CSV";
     public static final String CSV_FILE_EXTENSION = "CSV_FILE_EXTENSION";
 
+    public static final String PATH_TO_SQL = "PATH_TO_SQL";
+
     public static final String CLIENT = "clients";
     public static final String CHASSIS_PART = "chassisParts";
     public static final String CAR = "cars";
@@ -69,4 +71,43 @@ public class Constants {
     public static final String ELECTRICITY_PART_FIELDS_DELIMITER = "<";
     public static final String ELECTRICITY_PART_OBJECT_DELIMITER = ">";
     public static final String EMPLOYEE_FIELDS_DELIMITER = "=";
+
+    public static final String DROP_ALL_TABLES = "DROP TABLE car, client, employee, enginepart, chassispart, electricitypart, orders, orders_engineparts, orders_chassisparts, orders_electricityparts";
+
+    //SQL SELECT
+
+    public static final String SELECT_EMPLOYEE="SELECT * FROM employee;";
+    public static final String SELECT_CAR = "SELECT * FROM car;";
+
+    //SQL UPDATE
+
+    public static final String UPDATE_EMPLOYEE_BY_ID = "UPDATE employee SET " +
+            "employeeID = %d," +
+            "employeeName = %s,";
+
+    public static final String UPDATE_CAR_BY_ID = "UPDATE car SET " +
+            "carID = %d," +
+            "brand = %s," +
+            "model = %s," +
+            "carYear = %d," +
+            "engine = %s,";
+
+
+    //SQL CREATE
+
+    public static final String CREATE_EMPLOYEE = "INSERT INTO employee"
+            + "  (employeeID, employeeName) VALUES "
+            + " (%d, '%s');";
+
+    public static final String CREATE_CAR = "INSERT INTO car"
+            + "  (carID, brand, model, carYear, engine) VALUES "
+            + " (%d, '%s', '%s', '%d', '%s');";
+
+
+    //SQL DELETE
+
+    public static final String DELETE_EMPLOYEE="DELETE FROM employee WHERE employeeID=%d;";
+    public static final String DELETE_CAR="DELETE FROM car WHERE carID=%d;";
+
+
 }

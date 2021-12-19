@@ -18,7 +18,7 @@ public class EmployeeConverter extends AbstractBeanField {
         try {
             String[] data = s.split(fieldDelimiter);
             employee.setEmployeeID(Long.parseLong(data[0]));
-            employee.setName(data[1]);
+            employee.setEmployeeName(data[1]);
         } catch (NullPointerException e){
             log.error(e);
         } finally {
@@ -36,7 +36,7 @@ public class EmployeeConverter extends AbstractBeanField {
                             + fieldDelimiter
                             + "%s",
                     employeeList.getEmployeeID(),
-                    employeeList.getName());
+                    employeeList.getEmployeeName());
 
         }
     }
