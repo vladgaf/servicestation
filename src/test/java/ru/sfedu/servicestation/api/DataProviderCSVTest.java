@@ -20,7 +20,7 @@ class DataProviderCSVTest extends TestBase{
     @Test
     void calculateMarkupSuccess() throws JAXBException, IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
         csvInstance.createOrder(order1);
-        assertEquals(csvInstance.calculateMarkup(1L), 250.0);
+        assertEquals(csvInstance.calculateMarkup(order1.getOrderID()), 250.0);
         csvInstance.deleteOrderByID(1L);
     }
 
@@ -64,7 +64,7 @@ class DataProviderCSVTest extends TestBase{
         csvInstance.createOrder(test_order);
         test_order.setTotalServiceIncome(144.4);
         test_order.setTotalEmployeeIncome(900.0);
-        assertEquals(csvInstance.calculateIncome(1L), test_order);
+        assertEquals(csvInstance.calculateIncome(order1.getOrderID()), test_order);
         csvInstance.deleteOrderByID(1L);
     }
 

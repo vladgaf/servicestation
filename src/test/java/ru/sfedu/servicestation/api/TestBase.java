@@ -23,28 +23,28 @@ public class TestBase {
 
     public Car car1 = createCar(1L, "Toyota", "Camry", 2018, "V6");
     public Car car2 = createCar(2L, "Honda", "Civic", 2001, "RB20DET");
-    public Car car2_upd = createCar(2L, "Honda", "Civic", 2003, "RB20DET");
+    public Car car2_upd = createCar(3L, "Honda", "Civic", 2003, "RB20DET");
 
 
-    public Client client1 = createClient(1L, "EgorDeadInside1000-7", ClientType.INDIVIDUAL, car1);
-    public Client client2 = createClient(2L, "Oleg", ClientType.EMPLOYEE, car2);
+    public Client client1 = createClient(4L, "EgorDeadInside1000-7", ClientType.INDIVIDUAL, car1);
+    public Client client2 = createClient(5L, "Oleg", ClientType.EMPLOYEE, car2);
 
-    public Employee employee1 = createEmployee(1L, "Sergay");
-    public Employee employee2 = createEmployee(2L, "Denis");
+    public Employee employee1 = createEmployee(6L, "Sergay");
+    public Employee employee2 = createEmployee(7L, "Denis");
 
-    public EnginePart enginePart1 = createEnginePart(1L, "Air filter", 199, true, 90, "Gasoline",
+    public EnginePart enginePart1 = createEnginePart(8L, "Air filter", 199, true, 90, "Gasoline",
             923532, 2.5F);
-    public EnginePart enginePart2 = createEnginePart(2L, "Nozzle", 19, false, 100, "Gasoline",
+    public EnginePart enginePart2 = createEnginePart(9L, "Nozzle", 19, false, 100, "Gasoline",
             654546, 1.6F);
 
-    public ChassisPart chassisPart1 = createChassisPart(3L, "Spring", 20, true, 100, "L", "Independent");
-    public ChassisPart chassisPart2 = createChassisPart(4L, "Rail", 9, true, 95, "L", "Independent");
+    public ChassisPart chassisPart1 = createChassisPart(10L, "Spring", 20, true, 100, "L", "Independent");
+    public ChassisPart chassisPart2 = createChassisPart(11L, "Rail", 9, true, 95, "L", "Independent");
 
-    public ElectricityPart electricityPart1 = createElectricityPart(5L, "Fuse", 3, true, 1.6F, 12.0F);
-    public ElectricityPart electricityPart2 = createElectricityPart(6L, "Cleat", 10, true, 1.6F, 12.0F);
+    public ElectricityPart electricityPart1 = createElectricityPart(12L, "Fuse", 3, true, 1.6F, 12.0F);
+    public ElectricityPart electricityPart2 = createElectricityPart(13L, "Cleat", 10, true, 1.6F, 12.0F);
 
 
-    public Order order1 = createOrder(1L, client1, enginePart1, chassisPart1, electricityPart1, employee1, 1000.0);
+    public Order order1 = createOrder(14L, client1, enginePart1, chassisPart1, electricityPart1, employee1, 1000.0);
     public Order test_order = order1;
 
 

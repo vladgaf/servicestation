@@ -17,7 +17,7 @@ class DataProviderXMLTest extends TestBase{
     @Test
     void calculateMarkupSuccess() throws JAXBException, IOException {
         xmlInstance.createOrder(order1);
-        assertEquals(xmlInstance.calculateMarkup(1L), 250.0);
+        assertEquals(xmlInstance.calculateMarkup(order1.getOrderID()), 250.0);
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
     }
 
@@ -31,7 +31,7 @@ class DataProviderXMLTest extends TestBase{
     @Test
     void calculateIndividualMarkupSuccess() throws IOException, JAXBException {
         xmlInstance.createOrder(order1);
-        assertEquals(xmlInstance.calculateIndividualMarkup(xmlInstance.getOrderByID(1L)), 250.0);
+        assertEquals(xmlInstance.calculateIndividualMarkup(xmlInstance.getOrderByID(order1.getOrderID())), 250.0);
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
     }
 
@@ -45,7 +45,7 @@ class DataProviderXMLTest extends TestBase{
     @Test
     void calculateCompanyMarkupSuccess() throws IOException, JAXBException {
         xmlInstance.createOrder(order1);
-        assertEquals(xmlInstance.calculateCompanyMarkup(xmlInstance.getOrderByID(1L)), 500.0);
+        assertEquals(xmlInstance.calculateCompanyMarkup(xmlInstance.getOrderByID(order1.getOrderID())), 500.0);
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
     }
 
@@ -61,7 +61,7 @@ class DataProviderXMLTest extends TestBase{
         xmlInstance.createOrder(test_order);
         test_order.setTotalServiceIncome(144.4);
         test_order.setTotalEmployeeIncome(900.0);
-        assertEquals(xmlInstance.calculateIncome(1L), test_order);
+        assertEquals(xmlInstance.calculateIncome(order1.getOrderID()), test_order);
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
     }
 
@@ -75,7 +75,7 @@ class DataProviderXMLTest extends TestBase{
     @Test
     void calculatePartsIncomeSuccess() throws IOException, JAXBException {
         xmlInstance.createOrder(order1);
-        assertEquals(xmlInstance.calculatePartsIncome(xmlInstance.getOrderByID(1L)), 44.400000000000006);
+        assertEquals(xmlInstance.calculatePartsIncome(xmlInstance.getOrderByID(order1.getOrderID())), 44.400000000000006);
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
     }
 
@@ -89,7 +89,7 @@ class DataProviderXMLTest extends TestBase{
     @Test
     void calculateEmployeeIncomeSuccess() throws IOException, JAXBException {
         xmlInstance.createOrder(order1);
-        assertEquals(xmlInstance.calculateEmployeeIncome(xmlInstance.getOrderByID(1L)), 100.0);
+        assertEquals(xmlInstance.calculateEmployeeIncome(xmlInstance.getOrderByID(order1.getOrderID())), 100.0);
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
     }
 
