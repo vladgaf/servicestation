@@ -74,7 +74,7 @@ public class Constants {
     public static final String ELECTRICITY_PART_OBJECT_DELIMITER = ">";
     public static final String EMPLOYEE_FIELDS_DELIMITER = "=";
 
-    public static final String DROP_ALL_TABLES = "DROP TABLE car, client, employee, enginepart, chassispart, electricitypart, orders, orders_engineparts, orders_chassisparts, orders_electricityparts";
+    public static final String DROP_ALL_TABLES = "DROP TABLE IF EXISTS car, client, employee, enginepart, chassispart, electricitypart, orders, orders_engineparts, orders_chassisparts, orders_electricityparts";
 
     //SQL SELECT
 
@@ -229,4 +229,18 @@ public class Constants {
     public static final String SELECT_CLIENT_BY_ID = "SELECT * FROM client WHERE clientID=%d;";
     public static final String SELECT_EMPLOYEE_BY_ID = "SELECT * FROM employee WHERE employeeID=%d;";
 
+
+    //CLI
+
+    public static final String CSV = "CSV";
+    public static final String XML = "XML";
+    public static final String JDBC = "JDBC";
+    public static final String CLI_ERROR_INVALID_DP = "ERROR: Invalid DataProvider";
+
+    public static final String BEANS_FILLED = "Beans filled successfully";
+
+    public static final String JDBC_TABLES_DPOPPED = "JDBC: Tables dropped successfully";
+    public static final String CSV_TABLES_DPOPPED = "CSV: Files cleared";
+    public static final String XML_TABLES_DPOPPED = "CSV: Files cleared";
+    public static final String CLI_GENERATE_BEANS = "GENERATEBEANS";
 }

@@ -67,7 +67,7 @@ public class DataProviderJDBC extends AbstractDataProvider {
         initConnection();
         statement.executeUpdate(Constants.DROP_ALL_TABLES);
         closeConnection();
-        log.info("TABLES DPOPPED");
+        log.info(Constants.JDBC_TABLES_DPOPPED);
     }
 
 
@@ -549,7 +549,6 @@ public class DataProviderJDBC extends AbstractDataProvider {
                 e.printStackTrace();
             }
         });
-        closeConnection();
     }
 
     public List<ChassisPart> getOrderChassisPartsByID(Long id) throws SQLException, IOException {
@@ -631,7 +630,6 @@ public class DataProviderJDBC extends AbstractDataProvider {
                 statement.executeUpdate(String.format(Constants.CREATE_ORDER_ENGINEPARTS,
                         orderID,
                         n.getPartID()));
-                closeConnection();
             } catch (SQLException | IOException e) {
                 e.printStackTrace();
             }
@@ -717,7 +715,6 @@ public class DataProviderJDBC extends AbstractDataProvider {
                 statement.executeUpdate(String.format(Constants.CREATE_ORDER_ELECTRICITYPARTS,
                         orderID,
                         n.getPartID()));
-                closeConnection();
             } catch (SQLException | IOException e) {
                 e.printStackTrace();
             }

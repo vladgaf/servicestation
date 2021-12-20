@@ -37,7 +37,7 @@ class DataProviderJDBCTest2 extends TestBase{
     void crudOrder() throws IOException, SQLException {
         jdbcInstance.insertOrder(order1);
         jdbcInstance.getOrderByID(order1.getOrderID());
-        jdbcInstance.deleteOrder(order1);
+        //jdbcInstance.deleteOrder(order1);
     }
 
     @Test

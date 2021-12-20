@@ -1,29 +1,34 @@
-package ru.sfedu.servicestation.api;
+package ru.sfedu.servicestation.utils;
 
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.sfedu.servicestation.api.DataProviderCSV;
+import ru.sfedu.servicestation.api.DataProviderJDBC;
+import ru.sfedu.servicestation.api.DataProviderXML;
 import ru.sfedu.servicestation.beans.*;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestBase {
-    public Logger log = LogManager.getLogger(TestBase.class);
+public class CliBeansFiller {
 
+    private static final Logger log = LogManager.getLogger(CliBeansFiller.class);
     public DataProviderCSV csvInstance = new DataProviderCSV();
     public DataProviderXML xmlInstance = new DataProviderXML();
     public DataProviderJDBC jdbcInstance = new DataProviderJDBC();
+
+    public CliBeansFiller() throws IOException, JAXBException {}
 
     //Objects examples
 
     public Car car1 = createCar(1L, "Toyota", "Camry", 2018, "V6");
     public Car car2 = createCar(2L, "Honda", "Civic", 2001, "RB20DET");
-    public Car car2_upd = createCar(3L, "Honda", "Civic", 2003, "RB20DET");
 
 
     public Client client1 = createClient(4L, "Vladimir", ClientType.INDIVIDUAL, car1);
@@ -47,9 +52,6 @@ public class TestBase {
     public Order order1 = createOrder(14L, client1, enginePart1, chassisPart1, electricityPart1, employee1, 1000.0);
     public Order test_order = order1;
 
-
-    public TestBase() throws IOException, JAXBException {
-    }
 
     //Class constructors
 
@@ -94,7 +96,7 @@ public class TestBase {
     }
 
     public ChassisPart createChassisPart(Long partID, String name, Integer price, Boolean availability,
-                                       Integer condition, String side, String chassisType){
+                                         Integer condition, String side, String chassisType){
         ChassisPart chassisPart = new ChassisPart();
         chassisPart.setPartID(partID);
         chassisPart.setName(name);
@@ -122,7 +124,7 @@ public class TestBase {
 
         Order order = new Order();
 
-        List <EnginePart> engineParts = new ArrayList<>();
+        List<EnginePart> engineParts = new ArrayList<>();
         List <ChassisPart> chassisParts = new ArrayList<>();
         List <ElectricityPart> electricityParts = new ArrayList<>();
         engineParts.add(enginePart);
@@ -141,7 +143,60 @@ public class TestBase {
     }
 
 
-    // Clear files after testing
+    public void defaultBeansXML() throws IOException, JAXBException {
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
+        xmlInstance.createChassisPart(chassisPart1);
+        xmlInstance.createEnginePart(enginePart1);
+        xmlInstance.createElectricityPart(electricityPart1);
+        xmlInstance.createCar(car1);
+        xmlInstance.createClient(client1);
+        xmlInstance.createEmployee(employee1);
+        xmlInstance.createOrder(order1);
+        log.info(Constants.BEANS_FILLED);
+    }
+
+    public void defaultBeansCSV() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
+        csvInstance.deleteChassisPartByID(chassisPart1.getPartID());
+        csvInstance.deleteEnginePartByID(enginePart1.getPartID());
+        csvInstance.deleteElectricityPartByID(electricityPart1.getPartID());
+        csvInstance.deleteCarByID(car1.getCarID());
+        csvInstance.deleteClientByID(client1.getClientID());
+        csvInstance.deleteEmployeeByID(employee1.getEmployeeID());
+        csvInstance.deleteOrderByID(order1.getOrderID());
+        csvInstance.createChassisPart(chassisPart1);
+        csvInstance.createEnginePart(enginePart1);
+        csvInstance.createElectricityPart(electricityPart1);
+        csvInstance.createCar(car1);
+        csvInstance.createClient(client1);
+        csvInstance.createEmployee(employee1);
+        csvInstance.createOrder(order1);
+
+    }
+
+    public void defaultBeansJDBC() throws IOException, SQLException {
+        jdbcInstance.dropTables();
+        jdbcInstance.insertChassisPart(chassisPart1);
+        jdbcInstance.insertEnginePart(enginePart1);
+        jdbcInstance.insertElectricityPart(electricityPart1);
+        jdbcInstance.insertOrder(order1);
+    }
+
+
+    //CLEAR DATA
+
+    public void dropBeansXML() throws IOException {
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
+        log.info(Constants.XML_TABLES_DPOPPED);
+    }
+
+    public void dropBeansCSV() throws IOException {
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+        log.info(Constants.CSV_TABLES_DPOPPED);
+    }
+
+    public void dropBeansJDBC() throws SQLException {
+        jdbcInstance.dropTables();
+    }
 
     public void clearData(String path){
         try {
@@ -152,4 +207,5 @@ public class TestBase {
             log.error(e);
         }
     }
+
 }

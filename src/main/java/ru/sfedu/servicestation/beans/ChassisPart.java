@@ -67,7 +67,7 @@ public class ChassisPart extends Part{
                 ", side='" + side + '\'' +
                 ", chassisType='" + chassisType + '\'' +
                 ", partID=" + partID +
-                ", name='" + partName + '\'' +
+                ", name='" + name + '\'' +
                 ", price=" + price +
                 ", availability=" + availability +
                 '}';

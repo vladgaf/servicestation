@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xmlList>
+    <enginePart>
+        <partID>8</partID>
+        <name>Air filter</name>
+        <price>199</price>
+        <availability>true</availability>
+        <condition>90</condition>
+        <fuel>Gasoline</fuel>
+        <serialNumber>923532</serialNumber>
+        <volume>2.5</volume>
+    </enginePart>
+</xmlList>

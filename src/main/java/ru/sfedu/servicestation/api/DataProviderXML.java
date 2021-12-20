@@ -420,11 +420,11 @@ public class DataProviderXML extends AbstractDataProvider{
 
     private void employeesToXML(List<Employee> clList) throws JAXBException, IOException {
         try{
-            initReader(Constants.CAR);
+            initReader(Constants.EMPLOYEE);
             XMLList employeeList=new XMLList();
             employeeList.setEmployees(clList);
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(employeeList,initFile(Constants.CAR));
+            marshaller.marshal(employeeList,initFile(Constants.EMPLOYEE));
             closeReader();
         } catch(JAXBException e) {
             log.error(e);
@@ -434,7 +434,7 @@ public class DataProviderXML extends AbstractDataProvider{
 
     private List<Employee> employeesFromXML() throws JAXBException {
         try{
-            XMLList employeeList=(XMLList) unmarshaller.unmarshal(initFile(Constants.CAR));
+            XMLList employeeList=(XMLList) unmarshaller.unmarshal(initFile(Constants.EMPLOYEE));
             List<Employee> clList=employeeList.getEmployees();
             return clList;
         } catch (Exception e){

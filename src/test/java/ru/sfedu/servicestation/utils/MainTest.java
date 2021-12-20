@@ -13,6 +13,5 @@ class MainTest {
     @org.junit.jupiter.api.Test
     void logBasicSystemInfoTest() {
         Main testMain = new Main();
-        testMain.logBasicSystemInfo();
     }
 }

@@ -3,29 +3,50 @@ package ru.sfedu.servicestation.utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
+
+import ru.sfedu.servicestation.api.AbstractDataProvider;
+import ru.sfedu.servicestation.api.DataProviderJDBC;
+import ru.sfedu.servicestation.api.DataProviderCSV;
+import ru.sfedu.servicestation.api.DataProviderXML;
+
+import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class Main {
     private static Logger log = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
-        log.debug("AppForRunnerClient[0]: starting application...");
-        log.info(Arrays.toString(args));
+        switch (args[1].toUpperCase(Locale.ROOT)){
+            case Constants.CLI_GENERATE_BEANS:
+
+
+        }
+
     }
 
-    public void logBasicSystemInfo() {
-        log.info("Launching the application...");
-        log.info("Operating System: " + System.getProperty("os.name") + " " +
-                System.getProperty("os.version"));
-        log.info("JRE: " + System.getProperty("java.version"));
-        log.info("Java Launched From: " + System.getProperty("java.home"));
-        log.info("Class Path: " + System.getProperty("java.class.path"));
-        log.info("Library Path: " + System.getProperty("java.library.path"));
-        log.info("User Home Directory: " + System.getProperty("user.home"));
-        log.info("User Working Directory: " + System.getProperty("user.dir"));
-        log.debug("Test DEBUG logging.");
-        log.info("Test INFO logging.");
-        log.warn("Test WARN logging.");
-        log.error("Test ERROR logging.");
+
+
+    private static AbstractDataProvider getDataProvider(String dpType) throws IOException, JAXBException, CsvRequiredFieldEmptyException, SQLException, CsvDataTypeMismatchException {
+        switch(dpType.toUpperCase(Locale.ROOT)) {
+            case(Constants.CSV): {
+                return new DataProviderCSV();
+            }
+            case(Constants.XML): {
+                return new DataProviderXML();
+            }
+            case(Constants.JDBC): {
+                return new DataProviderJDBC();
+            }
+            default: {
+                log.error(Constants.CLI_ERROR_INVALID_DP);
+                System.exit(0);
+            }
+        }
+        return null;
     }
 }

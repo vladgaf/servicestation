@@ -13,7 +13,7 @@ public class Part implements Serializable {
     @CsvBindByName
     protected Long partID;
     @CsvBindByName
-    protected String partName;
+    protected String name;
     @CsvBindByName
     protected Integer price;
     @CsvBindByName
@@ -31,11 +31,11 @@ public class Part implements Serializable {
     }
 
     public String getName() {
-        return partName;
+        return name;
     }
 
     public void setName(String name) {
-        this.partName = name;
+        this.name = name;
     }
 
     public Integer getPrice() {
