@@ -99,7 +99,6 @@ public class DataProviderCSV extends AbstractDataProvider{
         carList.add(car);
         carList = sortCarList(carList);
         this.writeCars(carList);
-        log.info("car created");
         saveToLog(mongoDBDataProvider.initHistoryContentTrue(car, Constants.CAR, className, methodName), Constants.MONGODB_TEST_SERVER);
     }
 
@@ -206,7 +205,6 @@ public class DataProviderCSV extends AbstractDataProvider{
                 }
             }
             Client client = found.get();
-            log.info(client);
             return client;
         } catch (NoSuchElementException e){
             log.error(e);
@@ -481,7 +479,6 @@ public class DataProviderCSV extends AbstractDataProvider{
                 }
             }
             EnginePart enginePart = found.get();
-            log.info(enginePart.toString());
             return enginePart;
         } catch (NoSuchElementException e){
             log.error(e);
@@ -711,7 +708,7 @@ public class DataProviderCSV extends AbstractDataProvider{
     }
 
     //USE CASE METHODS
-
+    @Override
     public Double calculateMarkup(Long orderID) throws JAXBException, IOException {
         try{
             Order order = getOrderByID(orderID);
@@ -764,6 +761,7 @@ public class DataProviderCSV extends AbstractDataProvider{
 
     }
 
+    @Override
     public Order calculateIncome(Long orderID) throws JAXBException, IOException {
         try {
             Order order = getOrderByID(orderID);

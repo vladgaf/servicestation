@@ -5,13 +5,17 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
 
-    @org.junit.jupiter.api.Test
-    void logBasicSystemInfoTest() {
-        Main testMain = new Main();
+    @Test
+    void testMain() {
+        String argument = "CSV GENERATEBEANS";
+        String[] args = argument.split(" ");
+        //Main testMain = new Main(args);
+
     }
 }

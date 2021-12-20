@@ -235,12 +235,21 @@ public class Constants {
     public static final String CSV = "CSV";
     public static final String XML = "XML";
     public static final String JDBC = "JDBC";
+
     public static final String CLI_ERROR_INVALID_DP = "ERROR: Invalid DataProvider";
+    public static final String CLI_ERROR_NOT_ENOUGH_ARGUMENTS = "ERROR: Not enough arguments";
+    public static final String CLI_ERROR_WRONG_COMMAND = "ERROR: Wrong command";
 
     public static final String BEANS_FILLED = "Beans filled successfully";
-
     public static final String JDBC_TABLES_DPOPPED = "JDBC: Tables dropped successfully";
     public static final String CSV_TABLES_DPOPPED = "CSV: Files cleared";
     public static final String XML_TABLES_DPOPPED = "CSV: Files cleared";
+
     public static final String CLI_GENERATE_BEANS = "GENERATEBEANS";
+    public static final String CLI_CLEAR_DATA = "CLEARDATA";
+    public static final String CLI_CALCULATE_MARKUP = "CALCULATEMARKUP";
+    public static final String CLI_CALCULATE_INCOME = "CALCULATEINCOME";
+
+
+
 }

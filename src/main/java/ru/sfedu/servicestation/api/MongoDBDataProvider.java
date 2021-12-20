@@ -13,7 +13,9 @@ import org.joda.time.DateTime;
 import ru.sfedu.servicestation.beans.HistoryContent;
 import ru.sfedu.servicestation.utils.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.*;
 
 public class MongoDBDataProvider {
@@ -61,6 +63,11 @@ public class MongoDBDataProvider {
         return documents.into(new ArrayList<Document>());
     }
     public void initConnection(String string) {
+        PrintStream out = System.out;
+        ByteArrayOutputStream file=new ByteArrayOutputStream();
+        System.setOut(new PrintStream(file));
+
+
         try {
             this.client = new MongoClient(new MongoClientURI(ConfigurationUtil.getConfigurationEntry(Constants.MONGODB)));
             this.database = client.getDatabase(string);

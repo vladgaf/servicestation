@@ -303,7 +303,7 @@ public class DataProviderJDBC extends AbstractDataProvider {
         String methodName = getMethodName();
         String className = getClassName();
         try {
-            log.info(String.format(Constants.CREATE_CHASSIS_PART,
+            log.debug(String.format(Constants.CREATE_CHASSIS_PART,
                     chassisPart.getPartID(),
                     chassisPart.getName(),
                     chassisPart.getPrice(),
@@ -538,7 +538,7 @@ public class DataProviderJDBC extends AbstractDataProvider {
             try {
                 initDataSource();
                 initConnection();
-                log.info(String.format(Constants.CREATE_ORDER_CHASSISPARTS,
+                log.debug(String.format(Constants.CREATE_ORDER_CHASSISPARTS,
                         orderID,
                         n.getPartID()));
                 statement.executeUpdate(String.format(Constants.CREATE_ORDER_CHASSISPARTS,
@@ -624,7 +624,7 @@ public class DataProviderJDBC extends AbstractDataProvider {
             try {
                 initDataSource();
                 initConnection();
-                log.info(String.format(Constants.CREATE_ORDER_ENGINEPARTS,
+                log.debug(String.format(Constants.CREATE_ORDER_ENGINEPARTS,
                         orderID,
                         n.getPartID()));
                 statement.executeUpdate(String.format(Constants.CREATE_ORDER_ENGINEPARTS,
@@ -934,6 +934,7 @@ public class DataProviderJDBC extends AbstractDataProvider {
 
     // USE CASE METHODS
 
+    @Override
     public Double calculateMarkup(Long orderID) throws JAXBException, IOException {
         try{
             Order order = getOrderByID(orderID);
@@ -986,6 +987,7 @@ public class DataProviderJDBC extends AbstractDataProvider {
 
     }
 
+    @Override
     public Order calculateIncome(Long orderID) throws JAXBException, IOException {
         try {
             Order order = getOrderByID(orderID);

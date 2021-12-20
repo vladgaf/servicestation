@@ -22,5 +22,19 @@ public abstract class AbstractDataProvider  {
         mdbDP.insertRecord(historyContent,string);
     }
 
+    /**
+     * Calculate markup from order
+     * @param orderID Long
+     * @return Double
+     */
+    public abstract Double calculateMarkup(Long orderID) throws JAXBException, IOException;
 
+    /**
+     * Calculate income of service from the sold parts and the work of the employee,
+     * and update relevant fields.
+     * @param orderID Long
+     * @return Order
+     */
+
+    public abstract Order calculateIncome(Long orderID) throws JAXBException, IOException;
 }

@@ -95,7 +95,6 @@ public class DataProviderXML extends AbstractDataProvider{
             marshaller.marshal(clientList,initFile(Constants.CLIENT));
             closeReader();
         } catch(JAXBException e) {
-            log.error(e);
             log.info(Constants.ERROR_FILE);
         }
     }
@@ -207,7 +206,6 @@ public class DataProviderXML extends AbstractDataProvider{
             marshaller.marshal(carList,initFile(Constants.CAR));
             closeReader();
         } catch(JAXBException e) {
-            log.error(e);
             log.error(Constants.ERROR_FILE);
         }
     }
@@ -855,7 +853,7 @@ public class DataProviderXML extends AbstractDataProvider{
 
     // USE CASE METHODS
 
-
+    @Override
     public Double calculateMarkup(Long orderID) throws JAXBException, IOException {
         try{
             Order order = getOrderByID(orderID);
@@ -908,6 +906,7 @@ public class DataProviderXML extends AbstractDataProvider{
 
     }
 
+    @Override
     public Order calculateIncome(Long orderID) throws JAXBException, IOException {
         try {
             Order order = getOrderByID(orderID);
