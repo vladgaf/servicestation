@@ -251,5 +251,12 @@ public class Constants {
     public static final String CLI_CALCULATE_INCOME = "CALCULATEINCOME";
 
 
+    public static final int MONGODB_TIMEOUT = 300;
 
+    public static final String MONGODB_CLOSE = "MongoDB: Nothing to close";
+    public static final String MONGODB_FAULT_CONNECTION = "MongoDB: Connection not set";
+    public static final String MONGODB_SUCCESSFUL_CONNECTION = "MongoDB: Connection set";
+    public static final String MONGO_PING = "ping";
+    public static final String HC_STATUS_OK = "OK";
+    public static final String HC_STATUS_FAIL = "FAIL";
 }

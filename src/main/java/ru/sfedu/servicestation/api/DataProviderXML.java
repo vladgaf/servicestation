@@ -133,7 +133,7 @@ public class DataProviderXML extends AbstractDataProvider{
         saveToLog(mongoDBDataProvider.initHistoryContentTrue(client, Constants.CLIENT, className, methodName), Constants.MONGODB_TEST_SERVER);
     }
 
-    public Client getClientByID(Long id) throws JAXBException {
+    public Client getClientByID(Long id) throws JAXBException, IOException {
 
         String methodName = getMethodName();
         String className = getClassName();
@@ -244,7 +244,7 @@ public class DataProviderXML extends AbstractDataProvider{
         saveToLog(mongoDBDataProvider.initHistoryContentTrue(car, Constants.CLIENT, className, methodName), Constants.MONGODB_TEST_SERVER);
     }
 
-    public Car getCarByID(Long id) throws JAXBException {
+    public Car getCarByID(Long id) throws JAXBException, IOException {
 
         String methodName = getMethodName();
         String className = getClassName();
@@ -354,7 +354,7 @@ public class DataProviderXML extends AbstractDataProvider{
         saveToLog(mongoDBDataProvider.initHistoryContentTrue(order, Constants.CLIENT, className, methodName), Constants.MONGODB_TEST_SERVER);
     }
 
-    public Order getOrderByID(Long id) throws JAXBException {
+    public Order getOrderByID(Long id) throws JAXBException, IOException {
 
         String methodName = getMethodName();
         String className = getClassName();
@@ -464,7 +464,7 @@ public class DataProviderXML extends AbstractDataProvider{
         saveToLog(mongoDBDataProvider.initHistoryContentTrue(employee, Constants.CLIENT, className, methodName), Constants.MONGODB_TEST_SERVER);
     }
 
-    public Employee getEmployeeByID(Long id) throws JAXBException {
+    public Employee getEmployeeByID(Long id) throws JAXBException, IOException {
 
         String methodName = getMethodName();
         String className = getClassName();
@@ -582,7 +582,7 @@ public class DataProviderXML extends AbstractDataProvider{
 
     }
 
-    public ChassisPart getChassisPartByID(Long id) throws JAXBException {
+    public ChassisPart getChassisPartByID(Long id) throws JAXBException, IOException {
         String methodName = getMethodName();
         String className = getClassName();
 
@@ -597,7 +597,7 @@ public class DataProviderXML extends AbstractDataProvider{
                 saveToLog(mongoDBDataProvider.initHistoryContentTrue(chassisPart,Constants.CHASSIS_PART,className,methodName),Constants.MONGODB_TEST_SERVER);
                 return chassisPart;
             }
-        } catch (NullPointerException e){
+        } catch (NullPointerException | IOException e){
             log.error(Constants.ERROR_CHP_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
             return null;
@@ -701,7 +701,7 @@ public class DataProviderXML extends AbstractDataProvider{
 
     }
 
-    public ElectricityPart getElectricityPartByID(Long id) throws JAXBException {
+    public ElectricityPart getElectricityPartByID(Long id) throws JAXBException, IOException {
 
         String methodName = getMethodName();
         String className = getClassName();
@@ -718,7 +718,7 @@ public class DataProviderXML extends AbstractDataProvider{
                         Constants.MONGODB_TEST_SERVER);
                 return electricityPart;
             }
-        } catch (NullPointerException e){
+        } catch (NullPointerException | IOException e){
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
             return null;
         }
@@ -820,7 +820,7 @@ public class DataProviderXML extends AbstractDataProvider{
 
     }
 
-    public EnginePart getEnginePartByID(Long id) throws JAXBException {
+    public EnginePart getEnginePartByID(Long id) throws JAXBException, IOException {
 
         String methodName = getMethodName();
         String className = getClassName();
@@ -837,7 +837,7 @@ public class DataProviderXML extends AbstractDataProvider{
                         Constants.MONGODB_TEST_SERVER);
                 return enginePart;
             }
-        } catch (NullPointerException e){
+        } catch (NullPointerException | IOException e){
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
             return null;
         }
