@@ -165,7 +165,7 @@ public class DataProviderXML extends AbstractDataProvider{
             clientsToXML(clientList);
             saveToLog(mongoDBDataProvider.initHistoryContentTrue(client,Constants.CLIENT,className,methodName),Constants.MONGODB_TEST_SERVER);
         } catch (NoSuchElementException e) {
-            log.error(Constants.ERROR_CLIENT_NOT_FOUND);
+            //log.error(Constants.ERROR_CLIENT_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
 
@@ -276,7 +276,7 @@ public class DataProviderXML extends AbstractDataProvider{
             carsToXML(carList);
             saveToLog(mongoDBDataProvider.initHistoryContentTrue(car,Constants.CLIENT,className,methodName),Constants.MONGODB_TEST_SERVER);
         } catch (NoSuchElementException e) {
-            log.error(Constants.ERROR_CAR_NOT_FOUND);
+            //log.error(Constants.ERROR_CAR_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
 
@@ -386,7 +386,7 @@ public class DataProviderXML extends AbstractDataProvider{
             ordersToXML(orderList);
             saveToLog(mongoDBDataProvider.initHistoryContentTrue(order,Constants.CLIENT,className,methodName),Constants.MONGODB_TEST_SERVER);
         } catch (NoSuchElementException e) {
-            log.error(Constants.ERROR_ORDER_NOT_FOUND);
+            //log.error(Constants.ERROR_ORDER_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
 
@@ -496,7 +496,7 @@ public class DataProviderXML extends AbstractDataProvider{
             employeesToXML(employeeList);
             saveToLog(mongoDBDataProvider.initHistoryContentTrue(employee,Constants.CLIENT,className,methodName),Constants.MONGODB_TEST_SERVER);
         } catch (NoSuchElementException e) {
-            log.error(Constants.ERROR_CLIENT_NOT_FOUND);
+            //log.error(Constants.ERROR_CLIENT_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
 
@@ -587,16 +587,24 @@ public class DataProviderXML extends AbstractDataProvider{
         String className = getClassName();
 
         List<ChassisPart> chassisPartList=chassisPartsFromXML();
-
-        ChassisPart chassisPart=chassisPartList.stream().filter(x-> id.equals(x.getPartID())).findAny().orElse(null);
-        if(chassisPart == null){
+        try{
+            ChassisPart chassisPart=chassisPartList.stream().filter(x-> id.equals(x.getPartID())).findAny().orElse(null);
+            if(chassisPart == null){
+                log.error(Constants.ERROR_CHP_NOT_FOUND);
+                saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
+                return null;
+            } else {
+                saveToLog(mongoDBDataProvider.initHistoryContentTrue(chassisPart,Constants.CHASSIS_PART,className,methodName),Constants.MONGODB_TEST_SERVER);
+                return chassisPart;
+            }
+        } catch (NullPointerException e){
             log.error(Constants.ERROR_CHP_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
             return null;
-        } else {
-            saveToLog(mongoDBDataProvider.initHistoryContentTrue(chassisPart,Constants.CHASSIS_PART,className,methodName),Constants.MONGODB_TEST_SERVER);
-            return chassisPart;
         }
+
+
+
     }
 
     public void deleteChassisPartByID(Long id) throws JAXBException, IOException {
@@ -604,10 +612,15 @@ public class DataProviderXML extends AbstractDataProvider{
         String className = getClassName();
 
         List<ChassisPart> chassisPartList=chassisPartsFromXML();
-        chassisPartList=chassisPartList.stream().filter(x-> !id.equals(x.getPartID())).collect(Collectors.toList());
-        chassisPartsToXML(chassisPartList);
-        saveToLog(mongoDBDataProvider.initHistoryContentTrue(getChassisPartByID(id),Constants.CHASSIS_PART,className,methodName),
-                Constants.MONGODB_TEST_SERVER);
+        try{
+            chassisPartList=chassisPartList.stream().filter(x-> !id.equals(x.getPartID())).collect(Collectors.toList());
+            chassisPartsToXML(chassisPartList);
+            saveToLog(mongoDBDataProvider.initHistoryContentTrue(getChassisPartByID(id),Constants.CHASSIS_PART,className,methodName),
+                    Constants.MONGODB_TEST_SERVER);
+        } catch (NullPointerException e){
+            saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
+        }
+
     }
 
     public void updateChassisPartByID(ChassisPart chassisPart) throws JAXBException, IOException {
@@ -694,28 +707,37 @@ public class DataProviderXML extends AbstractDataProvider{
         String className = getClassName();
 
         List<ElectricityPart> electricityPartList=electricityPartsFromXML();
-
-        ElectricityPart electricityPart=electricityPartList.stream().filter(x-> id.equals(x.getPartID())).findAny().orElse(null);
-        if(electricityPart == null){
-            log.error(Constants.ERROR_ELP_NOT_FOUND);
+        try{
+            ElectricityPart electricityPart=electricityPartList.stream().filter(x-> id.equals(x.getPartID())).findAny().orElse(null);
+            if(electricityPart == null){
+                log.error(Constants.ERROR_ELP_NOT_FOUND);
+                saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
+                return null;
+            } else {
+                saveToLog(mongoDBDataProvider.initHistoryContentTrue(electricityPart,Constants.ELECTRICITY_PART,className,methodName),
+                        Constants.MONGODB_TEST_SERVER);
+                return electricityPart;
+            }
+        } catch (NullPointerException e){
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
             return null;
-        } else {
-            saveToLog(mongoDBDataProvider.initHistoryContentTrue(electricityPart,Constants.ELECTRICITY_PART,className,methodName),
-                    Constants.MONGODB_TEST_SERVER);
-            return electricityPart;
         }
+
     }
 
     public void deleteElectricityPartByID(Long id) throws JAXBException, IOException {
         String methodName = getMethodName();
         String className = getClassName();
+        try{
+            List<ElectricityPart> electricityPartList=electricityPartsFromXML();
+            electricityPartList=electricityPartList.stream().filter(x-> !id.equals(x.getPartID())).collect(Collectors.toList());
+            electricityPartsToXML(electricityPartList);
+            saveToLog(mongoDBDataProvider.initHistoryContentTrue(getElectricityPartByID(id),Constants.ELECTRICITY_PART,className,methodName),
+                    Constants.MONGODB_TEST_SERVER);
+        } catch (NullPointerException e) {
+            saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
+        }
 
-        List<ElectricityPart> electricityPartList=electricityPartsFromXML();
-        electricityPartList=electricityPartList.stream().filter(x-> !id.equals(x.getPartID())).collect(Collectors.toList());
-        electricityPartsToXML(electricityPartList);
-        saveToLog(mongoDBDataProvider.initHistoryContentTrue(getElectricityPartByID(id),Constants.ELECTRICITY_PART,className,methodName),
-                Constants.MONGODB_TEST_SERVER);
     }
 
     public void updateElectricityPartByID(ElectricityPart electricityPart) throws JAXBException, IOException {
@@ -804,17 +826,22 @@ public class DataProviderXML extends AbstractDataProvider{
         String className = getClassName();
 
         List<EnginePart> enginePartList=enginePartsFromXML();
-
-        EnginePart enginePart=enginePartList.stream().filter(x-> id.equals(x.getPartID())).findAny().orElse(null);
-        if(enginePart == null){
-            log.error(Constants.ERROR_ENP_NOT_FOUND);
+        try{
+            EnginePart enginePart=enginePartList.stream().filter(x-> id.equals(x.getPartID())).findAny().orElse(null);
+            if(enginePart == null){
+                log.error(Constants.ERROR_ENP_NOT_FOUND);
+                saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
+                return null;
+            } else {
+                saveToLog(mongoDBDataProvider.initHistoryContentTrue(enginePart,Constants.ELECTRICITY_PART,className,methodName),
+                        Constants.MONGODB_TEST_SERVER);
+                return enginePart;
+            }
+        } catch (NullPointerException e){
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
             return null;
-        } else {
-            saveToLog(mongoDBDataProvider.initHistoryContentTrue(enginePart,Constants.ELECTRICITY_PART,className,methodName),
-                    Constants.MONGODB_TEST_SERVER);
-            return enginePart;
         }
+
     }
 
     public void deleteEnginePartByID(Long id) throws JAXBException, IOException {
@@ -823,10 +850,15 @@ public class DataProviderXML extends AbstractDataProvider{
         String className = getClassName();
 
         List<EnginePart> enginePartList=enginePartsFromXML();
-        enginePartList=enginePartList.stream().filter(x-> !id.equals(x.getPartID())).collect(Collectors.toList());
-        enginePartsToXML(enginePartList);
-        saveToLog(mongoDBDataProvider.initHistoryContentTrue(getEnginePartByID(id),Constants.ELECTRICITY_PART,className,methodName),
-                Constants.MONGODB_TEST_SERVER);
+        try{
+            enginePartList=enginePartList.stream().filter(x-> !id.equals(x.getPartID())).collect(Collectors.toList());
+            enginePartsToXML(enginePartList);
+            saveToLog(mongoDBDataProvider.initHistoryContentTrue(getEnginePartByID(id),Constants.ELECTRICITY_PART,className,methodName),
+                    Constants.MONGODB_TEST_SERVER);
+        } catch (NullPointerException e){
+            saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
+        }
+
     }
 
     public void updateEnginePartByID(EnginePart enginePart) throws JAXBException, IOException {

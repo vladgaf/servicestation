@@ -28,7 +28,7 @@ public class Constants {
     public static final String LOG_PARTS_INCOME_FS = "Parts income (for service): ";
     public static final String LOG_EMPLOYEE_INCOME_FS = "Parts income (for service): ";
     public static final String LOG_SERVICE_INCOME = "Service income: ";
-    public static final String LOG_EMPLOYEE_INCOME = "Employee income: ";
+    public static final String LOG_EMPLOYEE_INCOME = "\t Employee income: ";
 
 
     public static final String ERROR_FILE = "File is corrupted";
@@ -243,7 +243,7 @@ public class Constants {
     public static final String BEANS_FILLED = "Beans filled successfully";
     public static final String JDBC_TABLES_DPOPPED = "JDBC: Tables dropped successfully";
     public static final String CSV_TABLES_DPOPPED = "CSV: Files cleared";
-    public static final String XML_TABLES_DPOPPED = "CSV: Files cleared";
+    public static final String XML_TABLES_DPOPPED = "XML: Files cleared";
 
     public static final String CLI_GENERATE_BEANS = "GENERATEBEANS";
     public static final String CLI_CLEAR_DATA = "CLEARDATA";

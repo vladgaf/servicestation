@@ -33,6 +33,7 @@ public class Main {
 
 
     public static void main(String[] args) throws CsvDataTypeMismatchException, SQLException, JAXBException, CsvRequiredFieldEmptyException, IOException {
+
         if (args.length < 2) {
             log.error(Constants.CLI_ERROR_NOT_ENOUGH_ARGUMENTS);
             System.exit(0);
@@ -55,7 +56,7 @@ public class Main {
                         break;
                     }
                 }
-
+            break;
             case Constants.CLI_CLEAR_DATA:
                 switch(args[0].toUpperCase(Locale.ROOT)) {
                     case(Constants.CSV): {
@@ -71,16 +72,17 @@ public class Main {
                         break;
                     }
                 }
-
+            break;
             case Constants.CLI_CALCULATE_MARKUP:
-                dataProvider.calculateIncome(Long.parseLong(args[2]));
-
+                dataProvider.calculateMarkup(Long.parseLong(args[2]));
+                break;
             case Constants.CLI_CALCULATE_INCOME:
                 dataProvider.calculateIncome(Long.parseLong(args[2]));
-
+                break;
             default:
                 log.info(Constants.CLI_ERROR_WRONG_COMMAND);
                 System.exit(0);
+                break;
         }
 
     }

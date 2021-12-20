@@ -156,7 +156,7 @@ public class DataProviderCSV extends AbstractDataProvider{
             saveToLog(mongoDBDataProvider.initHistoryContentTrue(car,Constants.CAR,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
         catch (NoSuchElementException e){
-            log.info(Constants.ERROR_CAR_NOT_FOUND);
+            //log.info(Constants.ERROR_CAR_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
     }
@@ -247,7 +247,7 @@ public class DataProviderCSV extends AbstractDataProvider{
             saveToLog(mongoDBDataProvider.initHistoryContentTrue(client,Constants.CLIENT,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
         catch (NoSuchElementException e){
-            log.info(Constants.ERROR_CLIENT_NOT_FOUND);
+            //log.info(Constants.ERROR_CLIENT_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
     }
@@ -337,7 +337,7 @@ public class DataProviderCSV extends AbstractDataProvider{
             saveToLog(mongoDBDataProvider.initHistoryContentTrue(employee,Constants.EMPLOYEE,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
         catch (NoSuchElementException e){
-            log.info(Constants.ERROR_EMPLOYEE_NOT_FOUND);
+            //log.info(Constants.ERROR_EMPLOYEE_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
     }
@@ -428,7 +428,7 @@ public class DataProviderCSV extends AbstractDataProvider{
             saveToLog(mongoDBDataProvider.initHistoryContentTrue(chassisPart,Constants.CHASSIS_PART,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
         catch (NoSuchElementException e){
-            log.info(Constants.ERROR_CHP_NOT_FOUND);
+            //log.info(Constants.ERROR_CHP_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
     }
@@ -521,7 +521,7 @@ public class DataProviderCSV extends AbstractDataProvider{
             saveToLog(mongoDBDataProvider.initHistoryContentTrue(enginePart,Constants.ENGINE_PART,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
         catch (NoSuchElementException e){
-            log.info(Constants.ERROR_ENP_NOT_FOUND);
+            //log.info(Constants.ERROR_ENP_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
     }
@@ -611,7 +611,7 @@ public class DataProviderCSV extends AbstractDataProvider{
             saveToLog(mongoDBDataProvider.initHistoryContentTrue(electricityPart,Constants.ELECTRICITY_PART,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
         catch (NoSuchElementException e){
-            log.info(Constants.ERROR_ELP_NOT_FOUND);
+            //log.info(Constants.ERROR_ELP_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
     }
@@ -659,10 +659,10 @@ public class DataProviderCSV extends AbstractDataProvider{
                 }
             }
             Order order = found.get();
-            log.debug(order);
+            //log.debug(order);
             return order;
         } catch (NoSuchElementException e){
-            log.error(e);
+            log.error(Constants.ERROR_ORDER_NOT_FOUND);
             return null;
         }
     }
@@ -702,7 +702,7 @@ public class DataProviderCSV extends AbstractDataProvider{
             saveToLog(mongoDBDataProvider.initHistoryContentTrue(order,Constants.ORDER,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
         catch (NoSuchElementException e){
-            log.info(Constants.ERROR_ORDER_NOT_FOUND);
+            //log.info(Constants.ERROR_ORDER_NOT_FOUND);
             saveToLog(mongoDBDataProvider.initHistoryContentFalse(Constants.NULL,className,methodName),Constants.MONGODB_TEST_SERVER);
         }
     }

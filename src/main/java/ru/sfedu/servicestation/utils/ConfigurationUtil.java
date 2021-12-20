@@ -13,12 +13,10 @@ import java.util.Properties;
  * @author Boris Jmailov
  */
 public class ConfigurationUtil {
-
     private static final String DEFAULT_CONFIG_PATH = "./src/main/resources/environment.properties";
+    private static final String CUSTOM_CONFIG_PATH=System.getProperty("environmentPath");
     private static final Properties configuration = new Properties();
-    /**
-     * Hides default constructor
-     */
+
     public ConfigurationUtil() {
     }
 
@@ -29,13 +27,14 @@ public class ConfigurationUtil {
         return configuration;
     }
 
-    /**
-     * Loads configuration from <code>DEFAULT_CONFIG_PATH</code>
-     * @throws IOException In case of the configuration file read failure
-     */
     private static void loadConfiguration() throws IOException{
-        File nf = new File(DEFAULT_CONFIG_PATH);
-        InputStream in = new FileInputStream(nf);// DEFAULT_CONFIG_PATH.getClass().getResourceAsStream(DEFAULT_CONFIG_PATH);
+        File nf;
+        if (CUSTOM_CONFIG_PATH!=null) {
+            nf = new File(CUSTOM_CONFIG_PATH);
+        }else {
+            nf= new File(DEFAULT_CONFIG_PATH);
+        }
+        InputStream in = new FileInputStream(nf);
         try {
             configuration.load(in);
         } catch (IOException ex) {

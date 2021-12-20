@@ -29,8 +29,8 @@ public class DataProviderJDBC extends AbstractDataProvider {
     private static final Logger log = LogManager.getLogger(DataProviderJDBC.class);
     MongoDBDataProvider mongoDBDataProvider=new MongoDBDataProvider();
 
-    public Connection connection=null;
-    public Statement statement=null;
+    private Connection connection=null;
+    private Statement statement=null;
     private final String PATH_TO_SQL= ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_SQL);
 
     public DataProviderJDBC() throws IOException {
@@ -43,11 +43,11 @@ public class DataProviderJDBC extends AbstractDataProvider {
         return Thread.currentThread().getStackTrace()[2].getMethodName();
     }
 
-    public void initConnection() throws SQLException {
+    private void initConnection() throws SQLException {
         connection = JDBCConnect.getConnection();
         statement = connection.createStatement();
     }
-    public void closeConnection() throws SQLException {
+    private void closeConnection() throws SQLException {
         connection.close();
         statement.close();
     }

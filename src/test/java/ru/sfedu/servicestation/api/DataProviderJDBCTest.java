@@ -23,7 +23,6 @@ class DataProviderJDBCTest extends TestBase{
     }
 
 
-
     @Test
     void calculateMarkupSuccess() throws JAXBException, IOException, SQLException {
         jdbcInstance.insertOrder(order1);
@@ -33,8 +32,9 @@ class DataProviderJDBCTest extends TestBase{
     }
 
     @Test
-    void calculateMarkupFail() throws JAXBException, IOException {
+    void calculateMarkupFail() throws JAXBException, IOException, SQLException {
         assertNull(jdbcInstance.calculateMarkup(30L));
+        dropAll();
     }
 
 
@@ -48,7 +48,7 @@ class DataProviderJDBCTest extends TestBase{
     @Test
     void calculateIndividualMarkupFail() throws IOException, JAXBException, SQLException {
         assertNull(jdbcInstance.calculateIndividualMarkup(jdbcInstance.getOrderByID(1L)));
-        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+        dropAll();
     }
 
 
@@ -78,9 +78,9 @@ class DataProviderJDBCTest extends TestBase{
     }
 
     @Test
-    void calculateIncomeFail() throws JAXBException, IOException {
+    void calculateIncomeFail() throws JAXBException, IOException, SQLException {
         assertNull(jdbcInstance.calculateIncome(3L));
-        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+        dropAll();
     }
 
 
@@ -94,7 +94,7 @@ class DataProviderJDBCTest extends TestBase{
     @Test
     void calculatePartsIncomeFail() throws IOException, JAXBException, SQLException {
         assertNull(jdbcInstance.calculatePartsIncome(jdbcInstance.getOrderByID(3L)));
-        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
+        dropAll();
     }
 
 

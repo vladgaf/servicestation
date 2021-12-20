@@ -144,7 +144,6 @@ public class CliBeansFiller {
 
 
     public void defaultBeansXML() throws IOException, JAXBException {
-        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
         xmlInstance.createChassisPart(chassisPart1);
         xmlInstance.createEnginePart(enginePart1);
         xmlInstance.createElectricityPart(electricityPart1);
@@ -156,13 +155,6 @@ public class CliBeansFiller {
     }
 
     public void defaultBeansCSV() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
-        csvInstance.deleteChassisPartByID(chassisPart1.getPartID());
-        csvInstance.deleteEnginePartByID(enginePart1.getPartID());
-        csvInstance.deleteElectricityPartByID(electricityPart1.getPartID());
-        csvInstance.deleteCarByID(car1.getCarID());
-        csvInstance.deleteClientByID(client1.getClientID());
-        csvInstance.deleteEmployeeByID(employee1.getEmployeeID());
-        csvInstance.deleteOrderByID(order1.getOrderID());
         csvInstance.createChassisPart(chassisPart1);
         csvInstance.createEnginePart(enginePart1);
         csvInstance.createElectricityPart(electricityPart1);
@@ -170,6 +162,7 @@ public class CliBeansFiller {
         csvInstance.createClient(client1);
         csvInstance.createEmployee(employee1);
         csvInstance.createOrder(order1);
+        log.info(Constants.BEANS_FILLED);
 
     }
 
