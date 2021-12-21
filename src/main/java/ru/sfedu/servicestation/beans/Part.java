@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.Objects;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -52,5 +53,31 @@ public class Part implements Serializable {
 
     public void setAvailability(Boolean availability) {
         this.availability = availability;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Part part = (Part) o;
+        return Objects.equals(partID, part.partID) &&
+                Objects.equals(name, part.name) &&
+                Objects.equals(price, part.price) &&
+                Objects.equals(availability, part.availability);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(partID, name, price, availability);
+    }
+
+    @Override
+    public String toString() {
+        return "Part{" +
+                "partID=" + partID +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", availability=" + availability +
+                '}';
     }
 }

@@ -64,6 +64,11 @@ public class Constants {
     public static final String STATUS_FAIL ="FAIL";
 
 
+    public static final String LIST_SPACE = " ";
+    public static final String LIST_EMPTYSTRING = "";
+    public static final String PARTIDLIST_OBJECT_DELIMITER = ",";
+    public static final String LIST_BRACKET_L = "[";
+    public static final String LIST_BRACKET_R = "]";
     public static final String CAR_FIELDS_DELIMITER = "@";
     public static final String CLIENT_FIELDS_DELIMITER = "\\^";
     public static final String CHASSIS_PART_FIELDS_DELIMITER = "\\*";
@@ -73,8 +78,11 @@ public class Constants {
     public static final String ELECTRICITY_PART_FIELDS_DELIMITER = "<";
     public static final String ELECTRICITY_PART_OBJECT_DELIMITER = ">";
     public static final String EMPLOYEE_FIELDS_DELIMITER = "=";
+    public static final String PARTS_FIELDS_DELIMITER = "-";
+    public static final String PARTS_OBJECT_DELIMITER = "¡";
+    public static final String PART_ID_LIST_FIELD_DELIMITER = "‱";
 
-    public static final String DROP_ALL_TABLES = "DROP TABLE IF EXISTS car, client, employee, enginepart, chassispart, electricitypart, orders, orders_engineparts, orders_chassisparts, orders_electricityparts";
+    public static final String DROP_ALL_TABLES = "DROP TABLE IF EXISTS car, client, employee, enginepart, chassispart, electricitypart, orders, orders_parts, part";
 
     //SQL SELECT
 
@@ -85,6 +93,7 @@ public class Constants {
     public static final String SELECT_ENGINE_PART = "SELECT * FROM enginePart;";
     public static final String SELECT_ELECTRICITY_PART = "SELECT * FROM electricityPart;";
     public static final String SELECT_CLIENT = "SELECT * FROM client;";
+    public static final String SELECT_PART = "SELECT * FROM part;";
     //SQL UPDATE
 
     public static final String UPDATE_EMPLOYEE_BY_ID = "UPDATE employee SET " +
@@ -157,12 +166,23 @@ public class Constants {
 
     public static final String UPDATE_EMPLOYEE = "UPDATE employee SET " +
             "employeeName = '%s'" +
-            "WHERE employeeID = %d;";;
+            "WHERE employeeID = %d;";
+
+    public static final String UPDATE_PART = "UPDATE chassisPart SET " +
+            "partName ='%s'," +
+            "price = %d," +
+            "availability ='%s'," +
+            "WHERE partID = %d;";
+
+    public static final String UPDATE_ORDER_PARTS ="UPDATE orders_parts SET " +
+            "partID = %d" +
+            "WHERE orderID = %d;";;
+    
     //SQL CREATE
 
     public static final String CREATE_ORDER = "INSERT INTO orders"
-            + "  (orderID ,employeeSalary, totalServiceIncome, totalEmployeeIncome, totalMarkup, clientID, employeeID) VALUES "
-            + " (%d ,%s, %s, %s, %s, %d, %d);";
+            + "  (orderID ,employeeSalary, totalServiceIncome, totalEmployeeIncome, totalMarkup, partsIDList, clientID, employeeID) VALUES "
+            + " (%d ,%s, %s, %s, %s, '%s', %d, %d);";
 
     public static final String CREATE_CHASSIS_PART =  "INSERT INTO chassisPart "
             + "  (partID, partName, price, availability, condition, side, chassisType) VALUES "
@@ -200,7 +220,14 @@ public class Constants {
             + "  (carID, brand, model, carYear, engine) VALUES "
             + " (%d, '%s', '%s', %d, '%s');";
 
+    public static final String CREATE_PART = "INSERT INTO part "
+            + "  (partID, partName, price, availability) VALUES "
+            + " (%d, '%s', %d, '%s');";
 
+    public static final String CREATE_ORDER_PARTS = "INSERT INTO orders_parts"
+            + " (orderID ,partID ) VALUES "
+            + " (%d ,%d);";
+    
     //SQL DELETE
 
     public static final String DELETE_EMPLOYEE="DELETE FROM employee WHERE employeeID=%d;";
@@ -213,6 +240,8 @@ public class Constants {
     public static final String DELETE_ORDER_ENGINEPARTS = "DELETE FROM orders_engineParts WHERE orderID=%d;";
     public static final String DELETE_ORDER_ELECTRICITYPARTS = "DELETE FROM orders_electricityParts WHERE orderID=%d;";
     public static final String DELETE_CLIENT = "DELETE FROM client WHERE clientID=%d;";
+    public static final String DELETE_PART = "DELETE FROM part WHERE partID=%d;";
+    public static final String DELETE_ORDER_PARTS = "DELETE FROM orders_parts WHERE orderID=%d;";
 
 
 
@@ -228,6 +257,8 @@ public class Constants {
     public static final String SELECT_CAR_BY_ID ="SELECT * FROM car WHERE carID=%d;";
     public static final String SELECT_CLIENT_BY_ID = "SELECT * FROM client WHERE clientID=%d;";
     public static final String SELECT_EMPLOYEE_BY_ID = "SELECT * FROM employee WHERE employeeID=%d;";
+    public static final String SELECT_PART_BY_ID = "SELECT * FROM part WHERE partID=%d;";
+    public static final String SELECT_ORDER_PARTS_BY_ID = "SELECT * FROM orders_parts WHERE orderID=%d;";
 
 
     //CLI
@@ -259,4 +290,8 @@ public class Constants {
     public static final String MONGO_PING = "ping";
     public static final String HC_STATUS_OK = "OK";
     public static final String HC_STATUS_FAIL = "FAIL";
+
+
+
+    ;
 }

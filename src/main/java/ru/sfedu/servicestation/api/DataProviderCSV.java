@@ -618,6 +618,42 @@ public class DataProviderCSV extends AbstractDataProvider{
 
     //ORDER METHODS
 
+    private Order orderPartsConverter (Order order){
+        List <Long> orderIDList = order.getPartIDList();
+        List <Part> parts = new ArrayList<>();
+        orderIDList.forEach(n->{
+            try{
+                Part part = new Part();
+                if (getElectricityPartByID(n) != null){
+                    part.setPartID(getElectricityPartByID(n).getPartID());
+                    part.setName(getElectricityPartByID(n).getName());
+                    part.setAvailability(getElectricityPartByID(n).getAvailability());
+                    part.setPrice(getElectricityPartByID(n).getPrice());
+                    parts.add(part);
+                } else if (getEnginePartByID(n) != null) {
+                    part.setPartID(getEnginePartByID(n).getPartID());
+                    part.setName(getEnginePartByID(n).getName());
+                    part.setAvailability(getEnginePartByID(n).getAvailability());
+                    part.setPrice(getEnginePartByID(n).getPrice());
+                    parts.add(part);
+                } else if (getChassisPartByID(n) != null) {
+                    part.setPartID(getChassisPartByID(n).getPartID());
+                    part.setName(getChassisPartByID(n).getName());
+                    part.setAvailability(getChassisPartByID(n).getAvailability());
+                    part.setPrice(getChassisPartByID(n).getPrice());
+                    parts.add(part);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+
+            }
+        });
+        //log.info(parts);
+        order.setParts(parts);
+        return order;
+    }
+
     private List<Order> sortOrderList(List<Order> orderList) {
         //orderList=orderList.stream().sorted((o1, o2)->o1.getOrderID().compareTo(o2.getOrderID())).collect(Collectors.toList());
         return orderList;
@@ -641,10 +677,14 @@ public class DataProviderCSV extends AbstractDataProvider{
     public void createOrder(Order order) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
         String methodName = getMethodName();
         String className = getClassName();
+
+        order = orderPartsConverter(order);
         List<Order> orderList = getOrderList();
+        //log.info(order);
         orderList.add(order);
         orderList = sortOrderList(orderList);
         this.writeOrders(orderList);
+
         saveToLog(mongoDBDataProvider.initHistoryContentTrue(order, Constants.ORDER, className, methodName), Constants.MONGODB_TEST_SERVER);
     }
 
@@ -659,7 +699,7 @@ public class DataProviderCSV extends AbstractDataProvider{
                 }
             }
             Order order = found.get();
-            //log.debug(order);
+            log.debug(order);
             return order;
         } catch (NoSuchElementException e){
             log.error(Constants.ERROR_ORDER_NOT_FOUND);
@@ -708,6 +748,12 @@ public class DataProviderCSV extends AbstractDataProvider{
     }
 
     //USE CASE METHODS
+
+    /**
+     * Calculate markup from order
+     * @param orderID Long
+     * @return Double
+     */
     @Override
     public Double calculateMarkup(Long orderID) throws JAXBException, IOException {
         try{
@@ -737,6 +783,11 @@ public class DataProviderCSV extends AbstractDataProvider{
 
     }
 
+    /**
+     * Calculate markup from order if ClientType == INDIVIDUAL
+     * @param order Order
+     * @return Double
+     */
     public Double calculateIndividualMarkup(Order order){
         try {
             Double individualMarkup = order.getEmployeeSalary() * Constants.INDIVIDUAL_RATIO;
@@ -749,6 +800,12 @@ public class DataProviderCSV extends AbstractDataProvider{
 
     }
 
+
+    /**
+     * Calculate markup from order if ClientType == COMPANY
+     * @param order Order
+     * @return Double
+     */
     public Double calculateCompanyMarkup(Order order){
         try{
             Double companyMarkup = order.getEmployeeSalary() * Constants.COMPANY_RATIO;
@@ -761,6 +818,12 @@ public class DataProviderCSV extends AbstractDataProvider{
 
     }
 
+    /**
+     * Calculate income of service from the sold parts and the work of the employee,
+     * and update relevant fields.
+     * @param orderID Long
+     * @return Order
+     */
     @Override
     public Order calculateIncome(Long orderID) throws JAXBException, IOException {
         try {
@@ -777,15 +840,17 @@ public class DataProviderCSV extends AbstractDataProvider{
 
     }
 
+
+    /**
+     * Calculate service income from sold parts
+     * @param order Order
+     * @return Double
+     */
     public Double calculatePartsIncome(Order order){
-        try{
-            Integer enginePartsTotal = order.getEngineParts().stream().mapToInt(Part::getPrice).sum();
-            Integer chassisPartsTotal = order.getChassisParts().stream().mapToInt(Part::getPrice).sum();
-            Integer electricityPartsTotal = order.getElectricityParts().stream().mapToInt(Part::getPrice).sum();
-
-            Double partsIncome = (enginePartsTotal+chassisPartsTotal+electricityPartsTotal) * Constants.PARTS_INCOME_RATIO;
+        try {
+            Integer partsTotal = order.getParts().stream().mapToInt(Part::getPrice).sum();
+            Double partsIncome = partsTotal * Constants.PARTS_INCOME_RATIO;
             log.info(Constants.LOG_PARTS_INCOME_FS + partsIncome);
-
             return partsIncome;
         } catch (NullPointerException e){
             log.error(Constants.ERROR_INCOME_NF);
@@ -794,6 +859,11 @@ public class DataProviderCSV extends AbstractDataProvider{
 
     }
 
+    /**
+     * Calculate service income from payment for employee services
+     * @param order Order
+     * @return Double
+     */
     public Double calculateEmployeeIncome(Order order){
         try{
             Double employeeIncome = order.getEmployeeSalary() * Constants.EMPLOYEE_INCOME_RATIO;

@@ -19,14 +19,12 @@ public class Order implements Serializable {
     private Long orderID;
     @CsvCustomBindByName(required = false, converter = ClientConverter.class)
     private Client client;
-    @CsvCustomBindByName(required = false, converter = EnginePartConverter.class)
-    private List<EnginePart> engineParts;
-    @CsvCustomBindByName(required = false, converter = ElectricityPartConverter.class)
-    private List<ElectricityPart> electricityParts;
-    @CsvCustomBindByName(required = false, converter = ChassisPartConverter.class)
-    private List<ChassisPart> chassisParts;
     @CsvCustomBindByName(required = false, converter = EmployeeConverter.class)
     private Employee employee;
+    @CsvCustomBindByName(required = false, converter = PartIDListConverter.class)
+    private List<Long> partIDList;
+    @CsvCustomBindByName(required = false, converter = PartsConverter.class)
+    private List<Part> parts;
     @CsvBindByName
     private Double employeeSalary;
     @CsvBindByName
@@ -55,28 +53,20 @@ public class Order implements Serializable {
         this.client = client;
     }
 
-    public List<EnginePart> getEngineParts() {
-        return engineParts;
+    public List<Part> getParts() {
+        return parts;
     }
 
-    public void setEngineParts(List<EnginePart> engineParts) {
-        this.engineParts = engineParts;
+    public void setParts(List<Part> parts) {
+        this.parts = parts;
     }
 
-    public List<ElectricityPart> getElectricityParts() {
-        return electricityParts;
+    public List<Long> getPartIDList() {
+        return partIDList;
     }
 
-    public void setElectricityParts(List<ElectricityPart> electricityParts) {
-        this.electricityParts = electricityParts;
-    }
-
-    public List<ChassisPart> getChassisParts() {
-        return chassisParts;
-    }
-
-    public void setChassisParts(List<ChassisPart> chassisParts) {
-        this.chassisParts = chassisParts;
+    public void setPartIDList(List<Long> partIDList) {
+        this.partIDList = partIDList;
     }
 
     public Employee getEmployee() {
@@ -126,10 +116,9 @@ public class Order implements Serializable {
         Order order = (Order) o;
         return Objects.equals(orderID, order.orderID) &&
                 Objects.equals(client, order.client) &&
-                Objects.equals(engineParts, order.engineParts) &&
-                Objects.equals(electricityParts, order.electricityParts) &&
-                Objects.equals(chassisParts, order.chassisParts) &&
                 Objects.equals(employee, order.employee) &&
+                Objects.equals(partIDList, order.partIDList) &&
+                Objects.equals(parts, order.parts) &&
                 Objects.equals(employeeSalary, order.employeeSalary) &&
                 Objects.equals(totalServiceIncome, order.totalServiceIncome) &&
                 Objects.equals(totalEmployeeIncome, order.totalEmployeeIncome) &&
@@ -138,7 +127,7 @@ public class Order implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderID, client, engineParts, electricityParts, chassisParts, employee, employeeSalary, totalServiceIncome, totalEmployeeIncome, totalMarkup);
+        return Objects.hash(orderID, client, employee, partIDList, parts, employeeSalary, totalServiceIncome, totalEmployeeIncome, totalMarkup);
     }
 
     @Override
@@ -146,10 +135,9 @@ public class Order implements Serializable {
         return "Order{" +
                 "orderID=" + orderID +
                 ", client=" + client +
-                ", engineParts=" + engineParts +
-                ", electricityParts=" + electricityParts +
-                ", chassisParts=" + chassisParts +
                 ", employee=" + employee +
+                ", partIDList=" + partIDList +
+                ", parts=" + parts +
                 ", employeeSalary=" + employeeSalary +
                 ", totalServiceIncome=" + totalServiceIncome +
                 ", totalEmployeeIncome=" + totalEmployeeIncome +

@@ -25,8 +25,10 @@ class DataProviderJDBCTest extends TestBase{
 
     @Test
     void calculateMarkupSuccess() throws JAXBException, IOException, SQLException {
+        jdbcInstance.insertChassisPart(chassisPart1);
+        jdbcInstance.insertEnginePart(enginePart1);
+        jdbcInstance.insertElectricityPart(electricityPart1);
         jdbcInstance.insertOrder(order1);
-        //log.debug(jdbcInstance.calculateMarkup(order1.getOrderID()));
         assertEquals(jdbcInstance.calculateMarkup(order1.getOrderID()), 250.0);
         dropAll();
     }
@@ -40,6 +42,9 @@ class DataProviderJDBCTest extends TestBase{
 
     @Test
     void calculateIndividualMarkupSuccess() throws IOException, SQLException {
+        jdbcInstance.insertChassisPart(chassisPart1);
+        jdbcInstance.insertEnginePart(enginePart1);
+        jdbcInstance.insertElectricityPart(electricityPart1);
         jdbcInstance.insertOrder(order1);
         assertEquals(jdbcInstance.calculateIndividualMarkup(order1), 250.0);
         dropAll();
@@ -54,6 +59,9 @@ class DataProviderJDBCTest extends TestBase{
 
     @Test
     void calculateCompanyMarkupSuccess() throws IOException, SQLException {
+        jdbcInstance.insertChassisPart(chassisPart1);
+        jdbcInstance.insertEnginePart(enginePart1);
+        jdbcInstance.insertElectricityPart(electricityPart1);
         jdbcInstance.insertOrder(order1);
         assertEquals(jdbcInstance.calculateCompanyMarkup(order1), 500.0);
         dropAll();
@@ -68,6 +76,9 @@ class DataProviderJDBCTest extends TestBase{
 
     @Test
     void calculateIncomeSuccess() throws JAXBException, IOException, SQLException {
+        jdbcInstance.insertChassisPart(chassisPart1);
+        jdbcInstance.insertEnginePart(enginePart1);
+        jdbcInstance.insertElectricityPart(electricityPart1);
         jdbcInstance.insertOrder(test_order);
         test_order.setTotalServiceIncome(144.4);
         test_order.setTotalEmployeeIncome(900.0);
@@ -86,6 +97,9 @@ class DataProviderJDBCTest extends TestBase{
 
     @Test
     void calculatePartsIncomeSuccess() throws IOException, SQLException {
+        jdbcInstance.insertChassisPart(chassisPart1);
+        jdbcInstance.insertEnginePart(enginePart1);
+        jdbcInstance.insertElectricityPart(electricityPart1);
         jdbcInstance.insertOrder(order1);
         assertEquals(jdbcInstance.calculatePartsIncome(order1), 44.400000000000006);
         dropAll();
@@ -100,6 +114,9 @@ class DataProviderJDBCTest extends TestBase{
 
     @Test
     void calculateEmployeeIncomeSuccess() throws IOException, SQLException {
+        jdbcInstance.insertChassisPart(chassisPart1);
+        jdbcInstance.insertEnginePart(enginePart1);
+        jdbcInstance.insertElectricityPart(electricityPart1);
         jdbcInstance.insertOrder(order1);
         assertEquals(jdbcInstance.calculateEmployeeIncome(order1), 100.0);
         dropAll();

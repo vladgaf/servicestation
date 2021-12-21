@@ -80,9 +80,6 @@ public class DataProviderXML extends AbstractDataProvider{
         }
     }
 
-    private void findPart(Long partID){
-
-    }
 
     //Client methods
 
@@ -306,6 +303,42 @@ public class DataProviderXML extends AbstractDataProvider{
 
     //Order methods
 
+    private Order orderPartsConverter (Order order){
+        List <Long> orderIDList = order.getPartIDList();
+        List <Part> parts = new ArrayList<Part>();
+        orderIDList.forEach(n->{
+            try{
+                Part part = new Part();
+                if (getElectricityPartByID(n) != null){
+                    part.setPartID(getElectricityPartByID(n).getPartID());
+                    part.setName(getElectricityPartByID(n).getName());
+                    part.setAvailability(getElectricityPartByID(n).getAvailability());
+                    part.setPrice(getElectricityPartByID(n).getPrice());
+                    parts.add(part);
+                } else if (getEnginePartByID(n) != null) {
+                    part.setPartID(getEnginePartByID(n).getPartID());
+                    part.setName(getEnginePartByID(n).getName());
+                    part.setAvailability(getEnginePartByID(n).getAvailability());
+                    part.setPrice(getEnginePartByID(n).getPrice());
+                    parts.add(part);
+                } else if (getChassisPartByID(n) != null) {
+                    part.setPartID(getChassisPartByID(n).getPartID());
+                    part.setName(getChassisPartByID(n).getName());
+                    part.setAvailability(getChassisPartByID(n).getAvailability());
+                    part.setPrice(getChassisPartByID(n).getPrice());
+                    parts.add(part);
+                }
+            } catch (JAXBException | IOException e) {
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+
+            } finally {
+                order.setParts(parts);
+            }
+        });
+        return order;
+    }
+
     private void ordersToXML(List<Order> clList) throws JAXBException, IOException {
         try{
             initReader(Constants.ORDER);
@@ -346,6 +379,7 @@ public class DataProviderXML extends AbstractDataProvider{
         String methodName = getMethodName();
         String className = getClassName();
 
+        order = orderPartsConverter(order);
         List<Order> orderList=ordersFromXML();
         orderList.add(order);
         orderList=sortOrderList(orderList);
@@ -643,6 +677,7 @@ public class DataProviderXML extends AbstractDataProvider{
         }
     }
 
+
     //ElectricityPart methods
 
     private void electricityPartsToXML(List<ElectricityPart> clList) throws JAXBException, IOException {
@@ -884,7 +919,11 @@ public class DataProviderXML extends AbstractDataProvider{
 
 
     // USE CASE METHODS
-
+    /**
+     * Calculate markup from order
+     * @param orderID Long
+     * @return Double
+     */
     @Override
     public Double calculateMarkup(Long orderID) throws JAXBException, IOException {
         try{
@@ -914,6 +953,11 @@ public class DataProviderXML extends AbstractDataProvider{
 
     }
 
+    /**
+     * Calculate markup from order if ClientType == INDIVIDUAL
+     * @param order Order
+     * @return Double
+     */
     public Double calculateIndividualMarkup(Order order){
         try {
             Double individualMarkup = order.getEmployeeSalary() * Constants.INDIVIDUAL_RATIO;
@@ -926,6 +970,11 @@ public class DataProviderXML extends AbstractDataProvider{
 
     }
 
+    /**
+     * Calculate markup from order if ClientType == COMPANY
+     * @param order Order
+     * @return Double
+     */
     public Double calculateCompanyMarkup(Order order){
         try{
             Double companyMarkup = order.getEmployeeSalary() * Constants.COMPANY_RATIO;
@@ -938,6 +987,12 @@ public class DataProviderXML extends AbstractDataProvider{
 
     }
 
+    /**
+     * Calculate income of service from the sold parts and the work of the employee,
+     * and update relevant fields.
+     * @param orderID Long
+     * @return Order
+     */
     @Override
     public Order calculateIncome(Long orderID) throws JAXBException, IOException {
         try {
@@ -954,15 +1009,16 @@ public class DataProviderXML extends AbstractDataProvider{
 
     }
 
+    /**
+     * Calculate service income from sold parts
+     * @param order Order
+     * @return Double
+     */
     public Double calculatePartsIncome(Order order){
         try{
-            Integer enginePartsTotal = order.getEngineParts().stream().mapToInt(Part::getPrice).sum();
-            Integer chassisPartsTotal = order.getChassisParts().stream().mapToInt(Part::getPrice).sum();
-            Integer electricityPartsTotal = order.getElectricityParts().stream().mapToInt(Part::getPrice).sum();
-
-            Double partsIncome = (enginePartsTotal+chassisPartsTotal+electricityPartsTotal) * Constants.PARTS_INCOME_RATIO;
+            Integer partsTotal = order.getParts().stream().mapToInt(Part::getPrice).sum();
+            Double partsIncome = partsTotal * Constants.PARTS_INCOME_RATIO;
             log.info(Constants.LOG_PARTS_INCOME_FS + partsIncome);
-
             return partsIncome;
         } catch (NullPointerException e){
             log.error(Constants.ERROR_INCOME_NF);
@@ -971,6 +1027,11 @@ public class DataProviderXML extends AbstractDataProvider{
 
     }
 
+    /**
+     * Calculate service income from payment for employee services
+     * @param order Order
+     * @return Double
+     */
     public Double calculateEmployeeIncome(Order order){
         try{
             Double employeeIncome = order.getEmployeeSalary() * Constants.EMPLOYEE_INCOME_RATIO;

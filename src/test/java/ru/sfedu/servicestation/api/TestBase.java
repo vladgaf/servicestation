@@ -44,7 +44,11 @@ public class TestBase {
     public ElectricityPart electricityPart2 = createElectricityPart(13L, "Cleat", 10, true, 1.6F, 12.0F);
 
 
-    public Order order1 = createOrder(14L, client1, enginePart1, chassisPart1, electricityPart1, employee1, 1000.0);
+
+    //public Order order1 = createOrder(14L, client1, enginePart1, chassisPart1, electricityPart1, employee1, 1000.0);
+
+
+    public Order order1 = createOrder(15L, client1, generatePartsIDList(), employee1, 1000.0);
     public Order test_order = order1;
 
 
@@ -117,29 +121,31 @@ public class TestBase {
         return electricityPart;
     }
 
-    public Order createOrder(Long orderID, Client client, EnginePart enginePart, ChassisPart chassisPart, ElectricityPart electricityPart,
-                             Employee employee, Double employeeSalary){
-
+    public List<Long> generatePartsIDList(){
+        List<Long> partIDlist = new ArrayList<>();
+        partIDlist.add(enginePart1.getPartID());
+        partIDlist.add(chassisPart1.getPartID());
+        partIDlist.add(electricityPart1.getPartID());
+        return partIDlist;
+    }
+    private Order createOrder(Long orderID, Client client, List<Long> partIDList, Employee employee, Double employeeSalary) {
         Order order = new Order();
-
-        List <EnginePart> engineParts = new ArrayList<>();
-        List <ChassisPart> chassisParts = new ArrayList<>();
-        List <ElectricityPart> electricityParts = new ArrayList<>();
-        engineParts.add(enginePart);
-        chassisParts.add(chassisPart);
-        electricityParts.add(electricityPart);
-
         order.setOrderID(orderID);
         order.setClient(client);
-        order.setEngineParts(engineParts);
-        order.setChassisParts(chassisParts);
-        order.setElectricityParts(electricityParts);
+        order.setPartIDList(partIDList);
         order.setEmployee(employee);
         order.setEmployeeSalary(employeeSalary);
-
         return order;
     }
 
+    public void createPartsList(){
+        List list = new ArrayList<>();
+        list.add(enginePart1);
+        list.add(chassisPart1);
+        list.add(electricityPart1);
+        log.info(list);
+
+    }
 
     // Clear files after testing
 

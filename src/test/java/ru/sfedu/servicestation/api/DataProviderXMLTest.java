@@ -58,6 +58,9 @@ class DataProviderXMLTest extends TestBase{
 
     @Test
     void calculateIncomeSuccess() throws JAXBException, IOException {
+        xmlInstance.createChassisPart(chassisPart1);
+        xmlInstance.createEnginePart(enginePart1);
+        xmlInstance.createElectricityPart(electricityPart1);
         xmlInstance.createOrder(test_order);
         test_order.setTotalServiceIncome(144.4);
         test_order.setTotalEmployeeIncome(900.0);
@@ -74,8 +77,14 @@ class DataProviderXMLTest extends TestBase{
 
     @Test
     void calculatePartsIncomeSuccess() throws IOException, JAXBException {
+        xmlInstance.createChassisPart(chassisPart1);
+        xmlInstance.createEnginePart(enginePart1);
+        xmlInstance.createElectricityPart(electricityPart1);
         xmlInstance.createOrder(order1);
+        log.info(xmlInstance.getOrderByID(order1.getOrderID()));
+        log.info(xmlInstance.calculatePartsIncome(xmlInstance.getOrderByID(order1.getOrderID())));
         assertEquals(xmlInstance.calculatePartsIncome(xmlInstance.getOrderByID(order1.getOrderID())), 44.400000000000006);
+
         clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_XML));
     }
 

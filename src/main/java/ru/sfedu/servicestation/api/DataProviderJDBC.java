@@ -1,6 +1,8 @@
 package ru.sfedu.servicestation.api;
 
 
+import com.opencsv.exceptions.CsvConstraintViolationException;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
@@ -20,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -73,6 +76,8 @@ public class DataProviderJDBC extends AbstractDataProvider {
 
     //RESULTSET CONVERTERS
 
+
+
     public List<Order> getOrderListFromResultSet(ResultSet resultSet) throws SQLException, IOException {
         List<Order> orderList = new ArrayList<>();
         while (resultSet.next()){
@@ -82,9 +87,9 @@ public class DataProviderJDBC extends AbstractDataProvider {
             order.setTotalServiceIncome(resultSet.getDouble(3));
             order.setTotalEmployeeIncome(resultSet.getDouble(4));
             order.setTotalMarkup(resultSet.getDouble(5));
-            order.setEngineParts(getOrderEnginePartsByID(resultSet.getLong(1)));
-            order.setChassisParts(getOrderChassisPartsByID(resultSet.getLong(1)));
-            order.setElectricityParts(getOrderElectricityPartsByID(resultSet.getLong(1)));
+//            order.setEngineParts(getOrderEnginePartsByID(resultSet.getLong(1)));
+//            order.setChassisParts(getOrderChassisPartsByID(resultSet.getLong(1)));
+//            order.setElectricityParts(getOrderElectricityPartsByID(resultSet.getLong(1)));
             order.setClient(getClientByID(resultSet.getLong(6)));
             order.setEmployee(getEmployeeByID(resultSet.getLong(7)));
         }
@@ -141,6 +146,19 @@ public class DataProviderJDBC extends AbstractDataProvider {
         return enginePartList;
     }
 
+    public List<Part> getPartListFromResultSet(ResultSet resultSet) throws SQLException, IOException {
+        List<Part> partList = new ArrayList<>();
+        while (resultSet.next()){
+            Part part=new Part();
+            part.setPartID(resultSet.getLong(1));
+            part.setName(resultSet.getString(2));
+            part.setPrice(resultSet.getInt(3));
+            part.setAvailability(resultSet.getBoolean(4));
+            partList.add(part);
+        }
+        return partList;
+    }
+
     public List<Client> getClientListFromResultSet(ResultSet resultSet) throws SQLException, IOException {
         List<Client> clientList = new ArrayList<>();
         while (resultSet.next()){
@@ -153,7 +171,6 @@ public class DataProviderJDBC extends AbstractDataProvider {
         }
         return clientList;
     }
-
     //LISTS CONVERTERS
 
     public List<Order> getOrderList() throws SQLException, IOException {
@@ -161,6 +178,15 @@ public class DataProviderJDBC extends AbstractDataProvider {
         initConnection();
         ResultSet rs = statement.executeQuery(Constants.SELECT_ORDER);
         List<Order> orderList=getOrderListFromResultSet(rs);
+        closeConnection();
+        return orderList;
+    }
+
+    public List<Part> getPartList() throws SQLException, IOException {
+        initDataSource();
+        initConnection();
+        ResultSet rs = statement.executeQuery(Constants.SELECT_PART);
+        List<Part> orderList=getPartListFromResultSet(rs);
         closeConnection();
         return orderList;
     }
@@ -201,11 +227,63 @@ public class DataProviderJDBC extends AbstractDataProvider {
         return clientList;
     }
 
+    public List<Long> convertLongList(String s) {
+        List<String> dataList = Arrays.asList(s.replace(Constants.LIST_SPACE, Constants.LIST_EMPTYSTRING)
+                .replace(Constants.LIST_BRACKET_L, Constants.LIST_EMPTYSTRING)
+                .replace(Constants.LIST_BRACKET_R, Constants.LIST_EMPTYSTRING)
+                .split(Constants.PARTIDLIST_OBJECT_DELIMITER));
+        List<Long> longDataList = new ArrayList<>();
+        try{
+            dataList.forEach(x->{
+                longDataList.add(Long.parseLong(x));
+            });
+            //log.info(longDataList);
+        } catch (Exception e) {
+
+        }
+        return longDataList;
+    }
 
 
     //CRUD
 
     //ORDER METHODS
+
+    public Order orderPartsConverter (Order order) throws SQLException{
+        List <Long> orderIDList = order.getPartIDList();
+        List <Part> parts = new ArrayList<>();
+        orderIDList.forEach(n->{
+            try{
+                Part part = new Part();
+                ElectricityPart electricityPart = getElectricityPartByID(n);
+                EnginePart enginePart = getEnginePartByID(n);
+                ChassisPart chassisPart = getChassisPartByID(n);
+                if (chassisPart != null){
+                    part.setPartID(chassisPart.getPartID());
+                    part.setName(chassisPart.getName());
+                    part.setAvailability(chassisPart.getAvailability());
+                    part.setPrice(chassisPart.getPrice());
+                    parts.add(part);
+                } else if (enginePart != null) {
+                    part.setPartID(enginePart.getPartID());
+                    part.setName(enginePart.getName());
+                    part.setAvailability(enginePart.getAvailability());
+                    part.setPrice(enginePart.getPrice());
+                    parts.add(part);
+                } else if (electricityPart != null) {
+                    part.setPartID(electricityPart.getPartID());
+                    part.setName(electricityPart.getName());
+                    part.setAvailability(electricityPart.getAvailability());
+                    part.setPrice(electricityPart.getPrice());
+                    parts.add(part);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        order.setParts(parts);
+        return order;
+    }
 
     public void insertOrder(Order order) throws SQLException, IOException {
         initDataSource();
@@ -213,20 +291,24 @@ public class DataProviderJDBC extends AbstractDataProvider {
         String methodName = getMethodName();
         String className = getClassName();
         try {
+            order = orderPartsConverter(order);
             insertClient(order.getClient());
             insertEmployee(order.getEmployee());
+            initDataSource();
+            initConnection();
             statement.executeUpdate(String.format(Constants.CREATE_ORDER,
                     order.getOrderID(),
                     order.getEmployeeSalary(),
                     order.getTotalServiceIncome(),
                     order.getTotalEmployeeIncome(),
                     order.getTotalMarkup(),
+                    order.getPartIDList().toString(),
                     order.getClient().getClientID(),
                     order.getEmployee().getEmployeeID()
             ));
-            insertOrderChassisParts(order.getChassisParts(), order.getOrderID());
-            insertOrderEngineParts(order.getEngineParts(), order.getOrderID());
-            insertOrderElectricityParts(order.getElectricityParts(), order.getOrderID());
+            initDataSource();
+            initConnection();
+            insertOrderParts(order.getParts(), order.getOrderID());
             saveToLog(mongoDBDataProvider.initHistoryContentTrue(order, Constants.ORDER, className, methodName), Constants.MONGODB_TEST_SERVER);
         } catch (JdbcSQLIntegrityConstraintViolationException e) {
 
@@ -248,11 +330,10 @@ public class DataProviderJDBC extends AbstractDataProvider {
             order.setTotalServiceIncome(resultSet.getDouble(3));
             order.setTotalEmployeeIncome(resultSet.getDouble(4));
             order.setTotalMarkup(resultSet.getDouble(5));
-            order.setEngineParts(getOrderEnginePartsByID(resultSet.getLong(1)));
-            order.setChassisParts(getOrderChassisPartsByID(resultSet.getLong(1)));
-            order.setElectricityParts(getOrderElectricityPartsByID(resultSet.getLong(1)));
-            order.setClient(getClientByID(resultSet.getLong(6)));
-            order.setEmployee(getEmployeeByID(resultSet.getLong(7)));
+            order.setParts(getOrderPartsByID(resultSet.getLong(1)));
+            order.setPartIDList(convertLongList(resultSet.getString(6)));
+            order.setClient(getClientByID(resultSet.getLong(7)));
+            order.setEmployee(getEmployeeByID(resultSet.getLong(8)));
         }
         saveToLog(mongoDBDataProvider.initHistoryContentTrue(order, Constants.ORDER, className, methodName), Constants.MONGODB_TEST_SERVER);
         log.debug(order);
@@ -275,12 +356,6 @@ public class DataProviderJDBC extends AbstractDataProvider {
         ));
         updateEmployee(order.getEmployee());
         updateClient(order.getClient());
-        deleteOrderEngineParts(order.getEngineParts(), order.getOrderID());
-        deleteOrderChassisParts(order.getChassisParts(), order.getOrderID());
-        deleteOrderElectricityParts(order.getElectricityParts(), order.getOrderID());
-        insertOrderEngineParts(order.getEngineParts(), order.getOrderID());
-        insertOrderChassisParts(order.getChassisParts(), order.getOrderID());
-        insertOrderElectricityParts(order.getElectricityParts(), order.getOrderID());
         saveToLog(mongoDBDataProvider.initHistoryContentTrue(order, Constants.ORDER, className, methodName), Constants.MONGODB_TEST_SERVER);
         closeConnection();
     }
@@ -303,15 +378,6 @@ public class DataProviderJDBC extends AbstractDataProvider {
         String methodName = getMethodName();
         String className = getClassName();
         try {
-            log.debug(String.format(Constants.CREATE_CHASSIS_PART,
-                    chassisPart.getPartID(),
-                    chassisPart.getName(),
-                    chassisPart.getPrice(),
-                    chassisPart.getAvailability(),
-                    chassisPart.getCondition(),
-                    chassisPart.getSide(),
-                    chassisPart.getChassisType()
-            ));
             statement.executeUpdate(String.format(Constants.CREATE_CHASSIS_PART,
                     chassisPart.getPartID(),
                     chassisPart.getName(),
@@ -347,7 +413,11 @@ public class DataProviderJDBC extends AbstractDataProvider {
         }
         saveToLog(mongoDBDataProvider.initHistoryContentTrue(chassisPart, Constants.CHASSIS_PART, className, methodName), Constants.MONGODB_TEST_SERVER);
         closeConnection();
-        return chassisPart;
+        if (chassisPart.getPartID() == null){
+            return null;
+        } else {
+            return chassisPart;
+        }
     }
 
     public void updateChassisPart(ChassisPart chassisPart) throws SQLException, IOException {
@@ -418,7 +488,12 @@ public class DataProviderJDBC extends AbstractDataProvider {
         }
         saveToLog(mongoDBDataProvider.initHistoryContentTrue(enginePart, Constants.ENGINE_PART, className, methodName), Constants.MONGODB_TEST_SERVER);
         closeConnection();
-        return enginePart;
+        if (enginePart.getPartID() == null){
+            return null;
+        } else {
+            return enginePart;
+        }
+
     }
 
     public void updateEnginePart(EnginePart enginePart) throws SQLException, IOException {
@@ -475,9 +550,8 @@ public class DataProviderJDBC extends AbstractDataProvider {
         initConnection();
         String methodName = getMethodName();
         String className = getClassName();
-        ResultSet resultSet = statement.executeQuery(String.format(Constants.SELECT_ELECTRICITY_PART_BY_ID,id));
-        log.debug(String.format(Constants.SELECT_ELECTRICITY_PART_BY_ID,id));
         ElectricityPart electricityPart = new ElectricityPart();
+        ResultSet resultSet = statement.executeQuery(String.format(Constants.SELECT_ELECTRICITY_PART_BY_ID,id));
         if(resultSet.next()){
             electricityPart.setPartID(resultSet.getLong(1));
             electricityPart.setName(resultSet.getString(2));
@@ -486,10 +560,15 @@ public class DataProviderJDBC extends AbstractDataProvider {
             electricityPart.setEngineVolume(resultSet.getFloat(5));
             electricityPart.setPower(resultSet.getFloat(6));
         }
-        log.debug(electricityPart);
+        //log.debug(electricityPart);
         saveToLog(mongoDBDataProvider.initHistoryContentTrue(electricityPart, Constants.ELECTRICITY_PART, className, methodName), Constants.MONGODB_TEST_SERVER);
         closeConnection();
-        return electricityPart;
+        if (electricityPart.getPartID() == null){
+            return null;
+        } else {
+            return electricityPart;
+        }
+
     }
 
     public void updateElectricityPart(ElectricityPart electricityPart) throws SQLException, IOException {
@@ -515,6 +594,94 @@ public class DataProviderJDBC extends AbstractDataProvider {
 
     }
 
+
+    //ORDER_PARTS METHODS
+
+
+    public void insertOrderParts(List<Part> orderPartsListEntry, Long orderID) throws SQLException, IOException {
+        initDataSource();
+        initConnection();
+        //log.debug(orderPartsListEntry);
+        orderPartsListEntry.forEach(n->{
+            try{
+                insertPart(n);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        List<Part> orderPartList=getPartList();
+        List<Long> partIDs = orderPartList.stream().map(Part::getPartID).collect(Collectors.toList());
+        List<Part> filteredParts = orderPartsListEntry.stream().filter(p -> partIDs.contains(p.getPartID())).collect(Collectors.toList());
+        filteredParts.forEach(n->{
+            try {
+                initDataSource();
+                initConnection();
+//                log.debug(String.format(Constants.CREATE_ORDER_PARTS,
+//                        orderID,
+//                        n.getPartID()));
+                statement.executeUpdate(String.format(Constants.CREATE_ORDER_PARTS,
+                        orderID,
+                        n.getPartID()));
+                closeConnection();
+            } catch (SQLException | IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public List<Part> getOrderPartsByID(Long id) throws SQLException, IOException {
+        initDataSource();
+        initConnection();
+        String methodName = getMethodName();
+        String className = getClassName();
+        List<Part> orderPartslist=new ArrayList<>();
+        ResultSet resultSet = statement.executeQuery(String.format(Constants.SELECT_ORDER_PARTS_BY_ID,id));
+        while (resultSet.next()){
+            orderPartslist.add(getPartByID(resultSet.getLong(2)));
+        }
+        closeConnection();
+        return orderPartslist;
+    }
+
+    public void updateOrderParts(List<Part> orderPartList,Long orderID) throws SQLException, IOException {
+        List<Part> orderPartsList=getPartList();
+        List<Long> partIDs = orderPartsList.stream().map(Part::getPartID).collect(Collectors.toList());
+        List<Part> filteredParts = orderPartList.stream().filter(p -> partIDs.contains(p.getPartID())).collect(Collectors.toList());
+        filteredParts.forEach(n->{
+            try {
+                statement.executeUpdate(String.format(Constants.UPDATE_ORDER_PARTS,
+                        n.getPartID(),
+                        orderID
+                ));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+    }
+
+    public void deleteOrderParts(List<Part> orderPartList,Long orderID) throws SQLException, IOException {
+        initDataSource();
+        initConnection();
+
+        List<Part> orderPartsList=getPartList();
+        List<Long> partIDs = orderPartsList.stream().map(Part::getPartID).collect(Collectors.toList());
+        List<Part> filteredParts = orderPartList.stream().filter(p -> partIDs.contains(p.getPartID())).collect(Collectors.toList());
+        filteredParts.forEach(n->{
+            try {
+                initDataSource();
+                initConnection();
+                statement.executeUpdate(String.format(Constants.DELETE_ORDER_PARTS,
+                        orderID));
+                closeConnection();
+            } catch (SQLException | IOException e) {
+                e.printStackTrace();
+            }
+        });
+        closeConnection();
+    }
 
     //ORDER_CHASSISPART METHODS
 
@@ -602,186 +769,13 @@ public class DataProviderJDBC extends AbstractDataProvider {
         closeConnection();
     }
 
-
-    //ORDER_ENGINEPARTS METHODS
-
-    public void insertOrderEngineParts(List<EnginePart> orderEnginePartList, Long orderID) throws SQLException, IOException {
-        initDataSource();
-        initConnection();
-        orderEnginePartList.forEach(n->{
-            try{
-                insertEnginePart(n);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        List<EnginePart> enginePartList=getEnginePartList();
-        List<Long> partIDs = enginePartList.stream().map(Part::getPartID).collect(Collectors.toList());
-        List<EnginePart> filteredEngineParts = orderEnginePartList.stream().filter(p -> partIDs.contains(p.getPartID())).collect(Collectors.toList());
-        filteredEngineParts.forEach(n->{
-            try {
-                initDataSource();
-                initConnection();
-                log.debug(String.format(Constants.CREATE_ORDER_ENGINEPARTS,
-                        orderID,
-                        n.getPartID()));
-                statement.executeUpdate(String.format(Constants.CREATE_ORDER_ENGINEPARTS,
-                        orderID,
-                        n.getPartID()));
-            } catch (SQLException | IOException e) {
-                e.printStackTrace();
-            }
-        });
-        closeConnection();
-    }
-
-    public List<EnginePart> getOrderEnginePartsByID(Long id) throws SQLException, IOException {
-        initDataSource();
-        initConnection();
-        String methodName = getMethodName();
-        String className = getClassName();
-        List<EnginePart> enginePartlist=new ArrayList<>();
-        ResultSet resultSet = statement.executeQuery(String.format(Constants.SELECT_ORDER_ENGINEPARTS_BY_ID,id));
-        while (resultSet.next()){
-            enginePartlist.add(getEnginePartByID(resultSet.getLong(2)));
-        }
-        initDataSource();
-        initConnection();
-        return enginePartlist;
-
-    }
-
-    public void updateOrderEngineParts(List<EnginePart> orderEnginePartList,Long orderID) throws SQLException, IOException {
-        List<EnginePart> enginePartList=getEnginePartList();
-        List<Long> partIDs = enginePartList.stream().map(Part::getPartID).collect(Collectors.toList());
-        List<EnginePart> filteredEngineParts = orderEnginePartList.stream().filter(p -> partIDs.contains(p.getPartID())).collect(Collectors.toList());
-        filteredEngineParts.forEach(n->{
-            try {
-                statement.executeUpdate(String.format(Constants.UPDATE_ORDER_ENGINEPARTS,
-                        n.getPartID(),
-                        orderID
-                ));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-
-    }
-
-    public void deleteOrderEngineParts(List<EnginePart> orderEnginePartList,Long orderID) throws SQLException, IOException {
-        List<EnginePart> enginePartList=getEnginePartList();
-        List<Long> partIDs = enginePartList.stream().map(Part::getPartID).collect(Collectors.toList());
-        List<EnginePart> filteredEngineParts = orderEnginePartList.stream().filter(p -> partIDs.contains(p.getPartID())).collect(Collectors.toList());
-        filteredEngineParts.forEach(n->{
-            try {
-                initDataSource();
-                initConnection();
-                statement.executeUpdate(String.format(Constants.DELETE_ORDER_ENGINEPARTS,
-                        orderID));
-                closeConnection();
-            } catch (SQLException | IOException e) {
-                e.printStackTrace();
-            }
-        });
-        closeConnection();
-
-    }
-
-
-    //ORDER_ELECTRICTYPARTS METHODS
-
-
-    public void insertOrderElectricityParts(List<ElectricityPart> orderElectricityPartList, Long orderID) throws SQLException, IOException {
-        initDataSource();
-        initConnection();
-        orderElectricityPartList.forEach(n->{
-            try{
-                insertElectricityPart(n);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        List<ElectricityPart> enginePartList=getElectricityPartList();
-        List<Long> partIDs = enginePartList.stream().map(Part::getPartID).collect(Collectors.toList());
-        List<ElectricityPart> filteredElectricityParts = orderElectricityPartList.stream().filter(p -> partIDs.contains(p.getPartID())).collect(Collectors.toList());
-        filteredElectricityParts.forEach(n->{
-            try {
-                initDataSource();
-                initConnection();
-                statement.executeUpdate(String.format(Constants.CREATE_ORDER_ELECTRICITYPARTS,
-                        orderID,
-                        n.getPartID()));
-            } catch (SQLException | IOException e) {
-                e.printStackTrace();
-            }
-        });
-        closeConnection();
-    }
-
-    public List<ElectricityPart> getOrderElectricityPartsByID(Long id) throws SQLException, IOException {
-        initDataSource();
-        initConnection();
-        String methodName = getMethodName();
-        String className = getClassName();
-        List<ElectricityPart> electricityPartList=new ArrayList<>();
-        ResultSet electricityPartResultSet = statement.executeQuery(String.format(Constants.SELECT_ORDER_ELECTRICITYPARTS_BY_ID,id));
-        log.debug(String.format(Constants.SELECT_ORDER_ELECTRICITYPARTS_BY_ID,id));
-        //log.debug(electricityPartResultSet.getRow());
-        while (electricityPartResultSet.next()){
-            log.debug(electricityPartResultSet.getString("PARTID"));
-            electricityPartList.add(getElectricityPartByID(electricityPartResultSet.getLong(2)));
-        }
-        closeConnection();
-        return electricityPartList;
-
-    }
-
-    public void updateOrderElectricityParts(List<ElectricityPart> orderElectricityPartList,Long orderID) throws SQLException, IOException {
-        List<ElectricityPart> enginePartList=getElectricityPartList();
-        List<Long> partIDs = enginePartList.stream().map(Part::getPartID).collect(Collectors.toList());
-        List<ElectricityPart> filteredElectricityParts = orderElectricityPartList.stream().filter(p -> partIDs.contains(p.getPartID())).collect(Collectors.toList());
-        filteredElectricityParts.forEach(n->{
-            try {
-                statement.executeUpdate(String.format(Constants.UPDATE_ORDER_ELECTRICITYPARTS,
-                        n.getPartID(),
-                        orderID
-                ));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-
-    }
-
-    public void deleteOrderElectricityParts(List<ElectricityPart> orderElectricityPartList,Long orderID) throws SQLException, IOException {
-        initDataSource();
-        initConnection();
-        List<ElectricityPart> enginePartList=getElectricityPartList();
-        List<Long> partIDs = enginePartList.stream().map(Part::getPartID).collect(Collectors.toList());
-        List<ElectricityPart> filteredElectricityParts = orderElectricityPartList.stream().filter(p -> partIDs.contains(p.getPartID())).collect(Collectors.toList());
-        filteredElectricityParts.forEach(n->{
-            try {
-                initDataSource();
-                initConnection();
-                statement.executeUpdate(String.format(Constants.DELETE_ORDER_ELECTRICITYPARTS,
-                        orderID));
-                closeConnection();
-            } catch (SQLException | IOException e) {
-                e.printStackTrace();
-            }
-        });
-        closeConnection();
-    }
-
     //CAR METHODS
 
     public void insertCar(Car car) throws SQLException, IOException {
         String methodName = getMethodName();
         String className = getClassName();
+        initDataSource();
+        initConnection();
         statement.executeUpdate(String.format(Constants.CREATE_CAR,
                 car.getCarID(),
                 car.getBrand(),
@@ -789,6 +783,7 @@ public class DataProviderJDBC extends AbstractDataProvider {
                 car.getYear(),
                 car.getEngine()
         ));
+        closeConnection();
         saveToLog(mongoDBDataProvider.initHistoryContentTrue(car, Constants.CAR, className, methodName), Constants.MONGODB_TEST_SERVER);
     }
 
@@ -826,6 +821,8 @@ public class DataProviderJDBC extends AbstractDataProvider {
     }
 
 
+
+
     //CLIENT METHODS
 
     public void insertClient(Client client) throws SQLException, IOException {
@@ -833,12 +830,15 @@ public class DataProviderJDBC extends AbstractDataProvider {
         String className = getClassName();
         insertCar(client.getCar());
         try {
+            initDataSource();
+            initConnection();
             statement.executeUpdate(String.format(Constants.CREATE_CLIENT,
                     client.getClientID(),
                     client.getName(),
                     client.getClientType(),
                     client.getCar().getCarID()
             ));
+            closeConnection();
             saveToLog(mongoDBDataProvider.initHistoryContentTrue(client, Constants.CLIENT, className, methodName), Constants.MONGODB_TEST_SERVER);
         } catch (JdbcSQLIntegrityConstraintViolationException e){
             log.info(e);
@@ -888,16 +888,79 @@ public class DataProviderJDBC extends AbstractDataProvider {
 
     }
 
+    //PART METHODS
+
+    public void insertPart(Part part) throws SQLException, IOException {
+        String methodName = getMethodName();
+        String className = getClassName();
+        try {
+            statement.executeUpdate(String.format(Constants.CREATE_PART,
+                    part.getPartID(),
+                    part.getName(),
+                    part.getPrice(),
+                    part.getAvailability()
+            ));
+            saveToLog(mongoDBDataProvider.initHistoryContentTrue(part, Constants.PART, className, methodName), Constants.MONGODB_TEST_SERVER);
+        } catch (JdbcSQLIntegrityConstraintViolationException e){
+            log.info(e);
+        }
+    }
+
+    public Part getPartByID(Long id) throws SQLException, IOException {
+        initDataSource();
+        initConnection();
+        String methodName = getMethodName();
+        String className = getClassName();
+        ResultSet resultSet = statement.executeQuery(String.format(Constants.SELECT_PART_BY_ID,id));
+        Part part=new Part();
+        if(resultSet.next()){
+            part.setPartID(resultSet.getLong(1));
+            part.setName(resultSet.getString(2));
+            part.setPrice(resultSet.getInt(3));
+            part.setAvailability(resultSet.getBoolean(4));
+        }
+        saveToLog(mongoDBDataProvider.initHistoryContentTrue(part, Constants.PART, className, methodName), Constants.MONGODB_TEST_SERVER);
+        log.debug(part);
+        closeConnection();
+        return part;
+    }
+
+    public void updatePart(Part part) throws SQLException, IOException {
+        initDataSource();
+        initConnection();
+        String methodName = getMethodName();
+        String className = getClassName();
+        statement.executeUpdate(String.format(Constants.UPDATE_PART,
+                part.getName(),
+                part.getPrice(),
+                part.getAvailability(),
+                part.getPartID()
+        ));
+        saveToLog(mongoDBDataProvider.initHistoryContentTrue(part, Constants.PART, className, methodName), Constants.MONGODB_TEST_SERVER);
+        closeConnection();
+    }
+
+    public void deletePart(Part part) throws SQLException, IOException {
+        String methodName = getMethodName();
+        String className = getClassName();
+        statement.executeUpdate(String.format(Constants.DELETE_PART, part.getPartID()));
+        saveToLog(mongoDBDataProvider.initHistoryContentTrue(part, Constants.PART, className, methodName), Constants.MONGODB_TEST_SERVER);
+
+    }
+
 
     //EMPLOYEE METHODS
 
     public void insertEmployee(Employee employee) throws SQLException, IOException {
         String methodName = getMethodName();
         String className = getClassName();
+        initDataSource();
+        initConnection();
         statement.executeUpdate(String.format(Constants.CREATE_EMPLOYEE,
                 employee.getEmployeeID(),
                 employee.getEmployeeName()
         ));
+        closeConnection();
         saveToLog(mongoDBDataProvider.initHistoryContentTrue(employee, Constants.EMPLOYEE, className, methodName), Constants.MONGODB_TEST_SERVER);
     }
 
@@ -934,6 +997,11 @@ public class DataProviderJDBC extends AbstractDataProvider {
 
     // USE CASE METHODS
 
+    /**
+     * Calculate markup from order
+     * @param orderID Long
+     * @return Double
+     */
     @Override
     public Double calculateMarkup(Long orderID) throws JAXBException, IOException {
         try{
@@ -963,6 +1031,11 @@ public class DataProviderJDBC extends AbstractDataProvider {
 
     }
 
+    /**
+     * Calculate markup from order if ClientType == INDIVIDUAL
+     * @param order Order
+     * @return Double
+     */
     public Double calculateIndividualMarkup(Order order){
         try {
             Double individualMarkup = order.getEmployeeSalary() * Constants.INDIVIDUAL_RATIO;
@@ -975,6 +1048,11 @@ public class DataProviderJDBC extends AbstractDataProvider {
 
     }
 
+    /**
+     * Calculate markup from order if ClientType == COMPANY
+     * @param order Order
+     * @return Double
+     */
     public Double calculateCompanyMarkup(Order order){
         try{
             Double companyMarkup = order.getEmployeeSalary() * Constants.COMPANY_RATIO;
@@ -987,6 +1065,12 @@ public class DataProviderJDBC extends AbstractDataProvider {
 
     }
 
+    /**
+     * Calculate income of service from the sold parts and the work of the employee,
+     * and update relevant fields.
+     * @param orderID Long
+     * @return Order
+     */
     @Override
     public Order calculateIncome(Long orderID) throws JAXBException, IOException {
         try {
@@ -1003,23 +1087,30 @@ public class DataProviderJDBC extends AbstractDataProvider {
 
     }
 
+    /**
+     * Calculate service income from sold parts
+     * @param order Order
+     * @return Double
+     */
     public Double calculatePartsIncome(Order order){
         try{
-            Integer enginePartsTotal = order.getEngineParts().stream().mapToInt(Part::getPrice).sum();
-            Integer chassisPartsTotal = order.getChassisParts().stream().mapToInt(Part::getPrice).sum();
-            Integer electricityPartsTotal = order.getElectricityParts().stream().mapToInt(Part::getPrice).sum();
-
-            Double partsIncome = (enginePartsTotal+chassisPartsTotal+electricityPartsTotal) * Constants.PARTS_INCOME_RATIO;
+            Integer partsTotal = order.getParts().stream().mapToInt(Part::getPrice).sum();
+            Double partsIncome = partsTotal * Constants.PARTS_INCOME_RATIO;
             log.info(Constants.LOG_PARTS_INCOME_FS + partsIncome);
-
             return partsIncome;
         } catch (NullPointerException e){
             log.error(Constants.ERROR_INCOME_NF);
             return null;
         }
 
+
     }
 
+    /**
+     * Calculate service income from payment for employee services
+     * @param order Order
+     * @return Double
+     */
     public Double calculateEmployeeIncome(Order order){
         try{
             Double employeeIncome = order.getEmployeeSalary() * Constants.EMPLOYEE_INCOME_RATIO;
