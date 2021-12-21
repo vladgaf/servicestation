@@ -1,12 +1,41 @@
 package ru.sfedu.servicestation.utils;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class JDBCConnect {
-    private static String jdbcURL = "jdbc:h2:~/test";
-    private static String jdbcUsername = "sa";
-    private static String jdbcPassword = "";
+
+
+    public static String jdbcURL;
+    static {
+        try {
+            jdbcURL = ConfigurationUtil.getConfigurationEntry(Constants.JDBC_URL);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static  String jdbcUsername;
+    static {
+        try {
+            jdbcUsername = ConfigurationUtil.getConfigurationEntry(Constants.JDBC_USERNAME);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static  String jdbcPassword;
+    static {
+        try {
+            jdbcPassword = ConfigurationUtil.getConfigurationEntry(Constants.JDBC_PASSWORD);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public JDBCConnect() throws IOException {
+    }
 
     public static Connection getConnection() {
         Connection connection = null;

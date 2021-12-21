@@ -34,7 +34,7 @@ public class PartsConverter extends AbstractBeanField {
                 partObject.setPartID(Long.parseLong(data[0]));
                 partObject.setName(data[1]);
                 partObject.setPrice(Integer.parseInt(data[2]));
-                log.info(data[3]);
+                //log.info(data[3]);
                 partObject.setAvailability(Boolean.parseBoolean(data[3]));
                 partsList.add(partObject);
             });

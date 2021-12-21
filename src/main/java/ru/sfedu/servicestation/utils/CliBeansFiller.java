@@ -168,6 +168,7 @@ public class CliBeansFiller {
         jdbcInstance.insertEnginePart(enginePart1);
         jdbcInstance.insertElectricityPart(electricityPart1);
         jdbcInstance.insertOrder(order1);
+        log.info(Constants.BEANS_FILLED);
     }
 
 
