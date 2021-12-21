@@ -25,6 +25,7 @@ class DataProviderCSVTest extends TestBase{
         csvInstance.createOrder(order1);
         assertEquals(csvInstance.calculateMarkup(order1.getOrderID()), 250.0);
         csvInstance.deleteOrderByID(order1.getOrderID());
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
     }
 
     @Test
@@ -42,6 +43,7 @@ class DataProviderCSVTest extends TestBase{
         csvInstance.createOrder(order1);
         assertEquals(csvInstance.calculateIndividualMarkup(order1), 250.0);
         csvInstance.deleteOrderByID(order1.getOrderID());
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
     }
 
     @Test
@@ -59,6 +61,7 @@ class DataProviderCSVTest extends TestBase{
         csvInstance.createOrder(order1);
         assertEquals(csvInstance.calculateCompanyMarkup(order1), 500.0);
         csvInstance.deleteOrderByID(order1.getOrderID());
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
     }
 
     @Test
@@ -70,14 +73,15 @@ class DataProviderCSVTest extends TestBase{
 
     @Test
     void calculateIncomeSuccess() throws JAXBException, IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
-        csvInstance.createChassisPart(chassisPart1);
-        csvInstance.createEnginePart(enginePart1);
         csvInstance.createElectricityPart(electricityPart1);
-        csvInstance.createOrder(test_order);
+        csvInstance.createEnginePart(enginePart1);
+        csvInstance.createChassisPart(chassisPart1);
+        csvInstance.createOrder(order1);
         test_order.setTotalServiceIncome(144.4);
         test_order.setTotalEmployeeIncome(900.0);
         assertEquals(csvInstance.calculateIncome(order1.getOrderID()), test_order);
         csvInstance.deleteOrderByID(order1.getOrderID());
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
     }
 
     @Test
@@ -95,6 +99,7 @@ class DataProviderCSVTest extends TestBase{
         csvInstance.createOrder(order1);
         assertEquals(csvInstance.calculatePartsIncome(order1), 44.400000000000006);
         csvInstance.deleteOrderByID(order1.getOrderID());
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
     }
 
     @Test
@@ -112,6 +117,7 @@ class DataProviderCSVTest extends TestBase{
         csvInstance.createOrder(order1);
         assertEquals(csvInstance.calculateEmployeeIncome(order1), 100.0);
         csvInstance.deleteOrderByID(order1.getOrderID());
+        clearData(ConfigurationUtil.getConfigurationEntry(Constants.PATH_TO_CSV));
     }
 
     @Test

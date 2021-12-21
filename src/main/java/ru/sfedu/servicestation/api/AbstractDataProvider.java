@@ -19,7 +19,7 @@ public abstract class AbstractDataProvider  {
     public AbstractDataProvider() throws IOException {}
 
     public void saveToLog(HistoryContent historyContent,String string) throws IOException {
-        mdbDP.insertRecord(historyContent,string);
+        //mdbDP.insertRecord(historyContent,string);
     }
 
     /**

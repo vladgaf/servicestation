@@ -21,7 +21,7 @@ public class PartIDListConverter extends AbstractBeanField {
 
 
     @Override
-    protected Object convert(String s) throws CsvDataTypeMismatchException, CsvConstraintViolationException {
+    public Object convert(String s) throws CsvDataTypeMismatchException, CsvConstraintViolationException {
         List<String> dataList = Arrays.asList(s.replace(Constants.LIST_SPACE, Constants.LIST_EMPTYSTRING)
                 .replace(Constants.LIST_BRACKET_L, Constants.LIST_EMPTYSTRING)
                 .replace(Constants.LIST_BRACKET_R, Constants.LIST_EMPTYSTRING)

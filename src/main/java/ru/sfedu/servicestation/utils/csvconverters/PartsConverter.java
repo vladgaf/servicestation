@@ -23,16 +23,18 @@ public class PartsConverter extends AbstractBeanField {
     private static final Logger log = LogManager.getLogger(PartsConverter.class);
 
     @Override
-    protected Object convert(String s) throws CsvDataTypeMismatchException, CsvConstraintViolationException {
+    public Object convert(String s) throws CsvDataTypeMismatchException, CsvConstraintViolationException {
         List<Part> partsList=new ArrayList<>();
         List<String> stringList= Arrays.asList(s.split(objectDelimiter));
         try {
             stringList.forEach(x-> {
                 Part partObject = new Part();
                 String[] data = x.split(fieldDelimiter);
+
                 partObject.setPartID(Long.parseLong(data[0]));
                 partObject.setName(data[1]);
                 partObject.setPrice(Integer.parseInt(data[2]));
+                log.info(data[3]);
                 partObject.setAvailability(Boolean.parseBoolean(data[3]));
                 partsList.add(partObject);
             });

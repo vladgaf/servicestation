@@ -4,6 +4,8 @@ import java.util.Locale;
 
 public class Constants {
 
+    //PATHS
+
     public static final String PATH_TO_XML = "PATH_TO_XML";
     public static final String XML_FILE_EXTENSION = "XML_FILE_EXTENSION";
 
@@ -11,6 +13,8 @@ public class Constants {
     public static final String CSV_FILE_EXTENSION = "CSV_FILE_EXTENSION";
 
     public static final String PATH_TO_SQL = "PATH_TO_SQL";
+
+    //BEANS
 
     public static final String CLIENT = "clients";
     public static final String CHASSIS_PART = "chassisParts";
@@ -23,6 +27,19 @@ public class Constants {
     public static final String ORDER = "orders";
     public static final String PART = "parts";
 
+    //MULTIPLIERS
+
+    public static final Double INDIVIDUAL_RATIO = 0.25;
+    public static final Double COMPANY_RATIO = 0.5;
+
+    public static final Double PARTS_INCOME_RATIO = 0.2;
+    public static final Double EMPLOYEE_INCOME_RATIO = 0.1;
+
+    public static final Double DOUBLE_ZERO = 0.0;
+    public static final Integer INT_ZERO = 0;
+
+
+    //LOG STRINGS
 
     public static final String LOG_MARKUP = "Markup: ";
     public static final String LOG_PARTS_INCOME_FS = "Parts income (for service): ";
@@ -46,23 +63,23 @@ public class Constants {
     public static final String ERROR_CHP_NOT_FOUND = "ERROR:ChassisPart does not exist";
     public static final String ERROR_ELP_NOT_FOUND = "ERROR:ElectricityPart does not exist";
 
-    public static final Double INDIVIDUAL_RATIO = 0.25;
-    public static final Double COMPANY_RATIO = 0.5;
 
-    public static final Double PARTS_INCOME_RATIO = 0.2;
-    public static final Double EMPLOYEE_INCOME_RATIO = 0.1;
-
-    public static final Double DOUBLE_ZERO = 0.0;
-    public static final Integer INT_ZERO = 0;
+    //MONGODB
 
     public static final String MONGODB="MONGODB";
     public static final String MONGODB_TEST_SERVER="test";
     public static final String SYSTEM="System";
     public static final String NULL="null";
 
-    public static final String STATUS_OK = "OK";
-    public static final String STATUS_FAIL ="FAIL";
+    public static final int MONGODB_TIMEOUT = 300;
+    public static final String MONGODB_CLOSE = "MongoDB: Nothing to close";
+    public static final String MONGODB_FAULT_CONNECTION = "MongoDB: Connection not set";
+    public static final String MONGODB_SUCCESSFUL_CONNECTION = "MongoDB: Connection set";
+    public static final String MONGO_PING = "ping";
+    public static final String HC_STATUS_OK = "OK";
+    public static final String HC_STATUS_FAIL = "FAIL";
 
+    //CSV DELIMITERS
 
     public static final String LIST_SPACE = " ";
     public static final String LIST_EMPTYSTRING = "";
@@ -79,7 +96,7 @@ public class Constants {
     public static final String ELECTRICITY_PART_OBJECT_DELIMITER = ">";
     public static final String EMPLOYEE_FIELDS_DELIMITER = "=";
     public static final String PARTS_FIELDS_DELIMITER = "-";
-    public static final String PARTS_OBJECT_DELIMITER = "¡";
+    public static final String PARTS_OBJECT_DELIMITER = "\\%";
     public static final String PART_ID_LIST_FIELD_DELIMITER = "‱";
 
     public static final String DROP_ALL_TABLES = "DROP TABLE IF EXISTS car, client, employee, enginepart, chassispart, electricitypart, orders, orders_parts, part";
@@ -94,6 +111,7 @@ public class Constants {
     public static final String SELECT_ELECTRICITY_PART = "SELECT * FROM electricityPart;";
     public static final String SELECT_CLIENT = "SELECT * FROM client;";
     public static final String SELECT_PART = "SELECT * FROM part;";
+
     //SQL UPDATE
 
     public static final String UPDATE_EMPLOYEE_BY_ID = "UPDATE employee SET " +
@@ -138,17 +156,6 @@ public class Constants {
             "volume = %f" +
             "WHERE partID = %d;";
 
-    public static final String UPDATE_ORDER_CHASSISPARTS = "UPDATE orders_chassisParts SET " +
-            "partID = %d" +
-            "WHERE orderID = %d;";
-
-    public static final String UPDATE_ORDER_ENGINEPARTS = "UPDATE orders_engineParts SET " +
-            "partID = %d" +
-            "WHERE orderID = %d;";
-
-    public static final String UPDATE_ORDER_ELECTRICITYPARTS = "UPDATE orders_electricityParts SET " +
-            "partID = %d" +
-            "WHERE orderID = %d;";
 
     public static final String UPDATE_CAR = "UPDATE car SET " +
             "carID = %d," +
@@ -196,17 +203,7 @@ public class Constants {
             + "  (partID, partName, price, availability, engineVolume, power) VALUES "
             + " (%d, '%s', %d, '%s', %s, %s);";
 
-    public static final String CREATE_ORDER_CHASSISPARTS = "INSERT INTO orders_chassisParts"
-            + " (orderID ,partID) VALUES "
-            + " (%d ,%d);";
 
-    public static final String CREATE_ORDER_ENGINEPARTS = "INSERT INTO orders_engineParts"
-            + " (orderID ,partID ) VALUES "
-            + " (%d ,%d);";
-
-    public static final String CREATE_ORDER_ELECTRICITYPARTS = "INSERT INTO orders_electricityParts"
-            + " (orderID ,partID ) VALUES "
-            + " (%d ,%d);";;
 
     public static final String CREATE_CLIENT = "INSERT INTO client"
             + "  (clientID, clientName, clientType, carID) VALUES "
@@ -236,9 +233,6 @@ public class Constants {
     public static final String DELETE_CHASSIS_PART =  "DELETE FROM chassisPart WHERE partID=%d;";
     public static final String DELETE_ENGINE_PART =  "DELETE FROM enginePart WHERE partID=%d;";
     public static final String DELETE_ELECTRICITY_PART =  "DELETE FROM electricityPart WHERE partID=%d;";
-    public static final String DELETE_ORDER_CHASSISPARTS = "DELETE FROM orders_chassisParts WHERE orderID=%d;";
-    public static final String DELETE_ORDER_ENGINEPARTS = "DELETE FROM orders_engineParts WHERE orderID=%d;";
-    public static final String DELETE_ORDER_ELECTRICITYPARTS = "DELETE FROM orders_electricityParts WHERE orderID=%d;";
     public static final String DELETE_CLIENT = "DELETE FROM client WHERE clientID=%d;";
     public static final String DELETE_PART = "DELETE FROM part WHERE partID=%d;";
     public static final String DELETE_ORDER_PARTS = "DELETE FROM orders_parts WHERE orderID=%d;";
@@ -251,9 +245,6 @@ public class Constants {
     public static final String SELECT_CHASSIS_PART_BY_ID = "SELECT * FROM chassisPart WHERE partID=%d;";
     public static final String SELECT_ENGINE_PART_BY_ID = "SELECT * FROM enginePart WHERE partID=%d;";
     public static final String SELECT_ELECTRICITY_PART_BY_ID = "SELECT * FROM electricityPart WHERE partID=%d;";
-    public static final String SELECT_ORDER_CHASSISPARTS_BY_ID = "SELECT * FROM orders_chassisParts WHERE orderID=%d;";
-    public static final String SELECT_ORDER_ENGINEPARTS_BY_ID = "SELECT * FROM orders_engineParts WHERE orderID=%d;";
-    public static final String SELECT_ORDER_ELECTRICITYPARTS_BY_ID = "SELECT * FROM orders_electricityParts WHERE orderID=%d;";
     public static final String SELECT_CAR_BY_ID ="SELECT * FROM car WHERE carID=%d;";
     public static final String SELECT_CLIENT_BY_ID = "SELECT * FROM client WHERE clientID=%d;";
     public static final String SELECT_EMPLOYEE_BY_ID = "SELECT * FROM employee WHERE employeeID=%d;";
@@ -281,17 +272,4 @@ public class Constants {
     public static final String CLI_CALCULATE_MARKUP = "CALCULATEMARKUP";
     public static final String CLI_CALCULATE_INCOME = "CALCULATEINCOME";
 
-
-    public static final int MONGODB_TIMEOUT = 300;
-
-    public static final String MONGODB_CLOSE = "MongoDB: Nothing to close";
-    public static final String MONGODB_FAULT_CONNECTION = "MongoDB: Connection not set";
-    public static final String MONGODB_SUCCESSFUL_CONNECTION = "MongoDB: Connection set";
-    public static final String MONGO_PING = "ping";
-    public static final String HC_STATUS_OK = "OK";
-    public static final String HC_STATUS_FAIL = "FAIL";
-
-
-
-    ;
 }

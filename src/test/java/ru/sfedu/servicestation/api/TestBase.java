@@ -51,6 +51,13 @@ public class TestBase {
     public Order order1 = createOrder(15L, client1, generatePartsIDList(), employee1, 1000.0);
     public Order test_order = order1;
 
+    public Long corruptedOrderID = 323L;
+    public Double expectedIndividualMarkup = 250.0;
+    public Double expectedCompanyMarkup = 500.0;
+    public Double expectedPartsIncome = 44.400000000000006;
+    public Double expectedEmployeeIncome = 100.0;
+    public Double expectedTotalServiceIncome = 144.4;
+    public Double expectedTotalEmployeeIncome = 900.0;
 
     public TestBase() throws IOException, JAXBException {
     }
